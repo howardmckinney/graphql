@@ -1,0 +1,87 @@
+mutation createSurvey_v2 {
+    createSurvey(
+        data: {
+            name: "Hertz Survey3"
+            description: "Tell us about your trip"
+            organization: { id: "50" }
+            useStarRepeat: true
+            feedbackChannel: { id: 2 }
+            externalId: "14"
+            transferOffsite: false
+            pages: [
+                {
+                    create: {
+                        name: "Check-in"
+                        pageTitle: "Tell us about your check-in experience"
+                        prompts: [{ id: 1 }]
+                        displayNextButton: true
+                        displayPreviousButton: false
+                        completionPoint: true
+                    }
+                }
+                {
+                    create: {
+                        name: "Trip"
+                        pageTitle: "Tell us about your car"
+                        prompts: [{ id: 1 }]
+                        displayNextButton: true
+                        displayPreviousButton: true
+                        completionPoint: false
+                    }
+                }
+                {
+                    create: {
+                        name: "Drop-off"
+                        pageTitle: "Tell us about your drop-off experience"
+                        prompts: [{ id: 1 }, { id: 2 }, { id: 3 }]
+                        displayNextButton: false
+                        displayPreviousButton: true
+                        completionPoint: true
+                    }
+                }
+            ]
+        }
+    ) {
+        id
+        name
+        description
+        organization {
+            id
+        }
+        feedbackChannel {
+            id
+        }
+        useStarRepeat
+        externalId
+        transferOffsite
+        pages {
+            totalCount
+            edges {
+                node {
+                    id
+                    name
+                    pageTitle
+                    displayPreviousButton
+                    displayNextButton
+                    completionPoint
+                    prompts {
+                        totalCount
+                        edges {
+                            node {
+                                __typename
+                                id
+                                name
+#                                dataField {
+#                                    id
+#                                }
+#                                organization {
+#                                    id
+#                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
