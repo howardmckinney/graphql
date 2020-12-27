@@ -1,0 +1,15 @@
+mutation deleteSurvey {
+    deleteSurvey(id: 1) {
+        id
+        name
+        pages {
+            totalCount
+            edges {
+                node {
+                    id
+                    name
+                }
+            }
+        }
+    }
+}

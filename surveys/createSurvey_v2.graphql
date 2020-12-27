@@ -3,10 +3,10 @@ mutation createSurvey_v2 {
         data: {
             name: "Hertz Survey3"
             description: "Tell us about your trip"
-            organization: { id: "50" }
+            organization: { id: "1" }
             useStarRepeat: true
             feedbackChannel: { id: 2 }
-            externalId: "14"
+            externalId: "1"
             transferOffsite: false
             pages: [
                 {

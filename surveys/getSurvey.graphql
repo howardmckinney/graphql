@@ -1,0 +1,39 @@
+query getSurvey {
+    survey(id: 1) {
+        id
+        name
+        organization {
+            id
+        }
+        externalId
+        pages {
+            totalCount
+            edges {
+                node {
+                    id
+                    name
+                    pageTitle
+                    displayPreviousButton
+                    displayNextButton
+                    completionPoint
+                    prompts {
+                        totalCount
+                        edges {
+                            node {
+                                __typename
+                                id
+                                name
+                                organization {
+                                    id
+                                }
+                                dataField {
+                                    id
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,72 @@
+mutation updateSurveyv3 {
+    updateSurvey(
+        id: 144
+        data: {
+            name: "New Hertz Survey"
+            description: "Our new survey"
+            feedbackChannel: { id: 2 }
+            externalId: 1
+            pages: [
+                { connect: { id: 13 } }
+                {
+                    create: {
+                        name: "New survey page"
+                        pageTitle: "Insert Title Here"
+                        displayNextButton: true
+                        displayPreviousButton: false
+                        completionPoint: true
+                        prompts: [{ id: 1 }]
+                    }
+                }
+                {
+                    update: {
+                        id: 136
+                        data: {
+                            name: "Updated survey page"
+                            pageTitle: "Tell us about your car2"
+                            displayNextButton: true
+                            displayPreviousButton: false
+                            completionPoint: true
+                            prompts: [{ id: 1 }, { id: 2 }]
+                        }
+                    }
+                }
+                { connect: { id: 12 } }
+            ]
+        }
+    ) {
+        id
+        name
+        description
+        feedbackChannel {
+            id
+        }
+        organization {
+            id
+        }
+        externalId
+        pages {
+            totalCount
+            edges {
+                node {
+                    id
+                    name
+                    pageTitle
+                    displayNextButton
+                    displayPreviousButton
+                    completionPoint
+                    prompts {
+                        totalCount
+                        edges {
+                            node {
+                                __typename
+                                id
+                                name
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
