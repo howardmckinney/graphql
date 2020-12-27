@@ -1,0 +1,9 @@
+mutation deletePrompt {
+    deletePrompt(id: "1") {
+        id
+        name
+        organization {
+            id
+        }
+    }
+}

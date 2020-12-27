@@ -1,0 +1,14 @@
+query getPrompt {
+    prompt(id: "1") {
+        __typename
+        id
+        name
+        organization {
+            id
+        }
+        dataField {
+            id
+        }
+        externalId
+    }
+}

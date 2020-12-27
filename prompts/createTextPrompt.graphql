@@ -1,0 +1,21 @@
+mutation createTextPrompt {
+    createTextPrompt(
+        data: {
+            name: "Car Model"
+            organization: { id: "1" }
+            externalId: 1
+            dataField: { id: "1323" }
+        }
+    ) {
+        __typename
+        id
+        name
+        organization {
+            id
+        }
+        externalId
+        dataField {
+            id
+        }
+    }
+}

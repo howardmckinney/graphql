@@ -1,0 +1,27 @@
+mutation updateTextPrompt {
+    updateTextPrompt(
+        id: "1"
+        data: {
+            name: "Car Model5"
+            dataField: { id: "13234" }
+            audioScript: "Some audio script"
+            webText: "Some web text"
+            required: false
+            confirm: true
+        }
+    ) {
+        __typename
+        id
+        name
+        audioScript
+        webText
+        required
+        confirm
+        organization {
+            id
+        }
+        dataField {
+            id
+        }
+    }
+}
