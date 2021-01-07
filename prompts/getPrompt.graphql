@@ -1,5 +1,5 @@
 query getPrompt {
-    prompt(id: "1") {
+    prompt(id: "432378") {
         __typename
         id
         name
@@ -10,5 +10,63 @@ query getPrompt {
             id
         }
         externalId
+        phrases {
+            id
+        }
+        events {
+            id
+        }
+        cssIdentifier
+        audioScript
+        webText
+        allowBargeIn
+        confirm
+        repromptLimit
+        required
+        defaultDisabledSurveyPrompt
+        showRequiredMarker
+        checkDigitStrategy
+        replayStrategy
+        ghostText
+        mask
+        ... on TextPrompt {
+            minLength
+            maxLength
+            encoding
+            encodeString
+            validationType
+            renderType
+            audioScript
+            multiBoxData
+        }
+        ... on DatePrompt {
+            customDatePattern
+            datePatternType
+            dateSelectionOverride
+        }
+        ... on NumericPrompt {
+            minLength
+            maxLength
+            isCurrency
+            forcedDecimalPlaces
+            renderType
+            multiBoxData
+        }
+        ... on CommentPrompt {
+            maxRecordTime
+            endAfter5sSilence
+            maxLength
+            useStrengthMeter
+            wordTarget
+            hintingThreshold
+            commentPromptHintingType
+            disableHintingUntil5Words
+            pearModeName
+            thinkingBubble
+            softPrompt
+            emptyCommentSoftPrompt
+            minImageCount
+            maxImageCount
+        }
     }
 }

@@ -1,0 +1,141 @@
+mutation createNumericPrompt {
+    createNumericPrompt(
+        data: {
+            name: "Car Model2"
+            organization: { id: "941" }
+            externalId: 14
+            dataField: { id: "13" }
+            cssIdentifier: "Some CSS"
+            audioScript: "Some audio script"
+            webText: "Some web text"
+            checkDigitStrategy: BUSTED_MICROS
+            allowBargeIn: true
+            confirm: true
+            phrases: { id: 4838 }
+            events: { id: 100 }
+            required: true
+            showRequiredMarker: true
+            ghostText: "My ghost text"
+            mask: "My mask"
+            replayStrategy: STAR
+            repromptLimit: 2
+            defaultDisabledSurveyPrompt: true
+            # Numeric prompt specific
+            minLength: 0
+            maxLength: 5
+            isCurrency: true
+            forcedDecimalPlaces: FOUR
+            renderType: MASKING_PLACEHOLDER
+            multiBoxData: "What is multibix data?"
+        }
+    ) {
+        __typename
+        id
+        name
+        organization {
+            id
+        }
+        externalId
+        dataField {
+            id
+        }
+        phrases {
+            id
+        }
+        events {
+            id
+        }
+        cssIdentifier
+        audioScript
+        webText
+        allowBargeIn
+        confirm
+        repromptLimit
+        required
+        defaultDisabledSurveyPrompt
+        showRequiredMarker
+        checkDigitStrategy
+        replayStrategy
+        ghostText
+        mask
+
+        # Numeric prompt specific
+        minLength
+        maxLength
+        isCurrency
+        forcedDecimalPlaces
+        renderType
+        multiBoxData
+    }
+}
+
+mutation updateNumericPrompt {
+    updateNumericPrompt(
+        id: "432386"
+        data: {
+            name: "Car Model2"
+            externalId: 10
+            dataField: { id: "1" }
+            cssIdentifier: "Some new CSS"
+            audioScript: "Some audio script"
+            webText: "Some web text"
+            checkDigitStrategy: BUSTED_MICROS
+            allowBargeIn: false
+            confirm: false
+            phrases: { id: 4838 }
+            events: { id: 100 }
+            required: true
+            showRequiredMarker: true
+            ghostText: "My ghost text"
+            mask: "My mask"
+            replayStrategy: STAR
+            repromptLimit: 2
+            defaultDisabledSurveyPrompt: true
+            # Numeric prompt specific
+            minLength: 5
+            maxLength: 10
+            isCurrency: true
+            forcedDecimalPlaces: TWO
+            renderType: MASKING_PLACEHOLDER
+            multiBoxData: "What is multibix data?"
+        }
+    ) {
+        __typename
+        id
+        name
+        organization {
+            id
+        }
+        externalId
+        dataField {
+            id
+        }
+        phrases {
+            id
+        }
+        events {
+            id
+        }
+        cssIdentifier
+        audioScript
+        webText
+        allowBargeIn
+        confirm
+        repromptLimit
+        required
+        defaultDisabledSurveyPrompt
+        showRequiredMarker
+        checkDigitStrategy
+        replayStrategy
+        ghostText
+        mask
+        # Numeric prompt
+        minLength
+        maxLength
+        isCurrency
+        forcedDecimalPlaces
+        renderType
+        multiBoxData
+    }
+}
+

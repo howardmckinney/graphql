@@ -1,9 +1,9 @@
-mutation createTextPrompt {
-    createTextPrompt(
+mutation createCommentPrompt {
+    createCommentPrompt(
         data: {
             name: "Car Model2"
             organization: { id: "941" }
-            externalId: 10
+            externalId: 9
             dataField: { id: "1" }
             cssIdentifier: "Some CSS"
             audioScript: "Some audio script"
@@ -20,14 +20,21 @@ mutation createTextPrompt {
             replayStrategy: STAR
             repromptLimit: 2
             defaultDisabledSurveyPrompt: true
-            # Text prompt specific
-            minLength: 10
-            maxLength: 100
-            encoding: ASCII
-            encodeString: "Some encode string"
-            validationType: EMAIL
-            renderType: MASKING_PLACEHOLDER
-            multiBoxData: "What is multibox data?"
+            # Comment prompt specific
+            maxRecordTime: 30
+            endAfter5sSilence: true
+            maxLength: 30
+            useStrengthMeter: true
+            wordTarget: 3
+            hintingThreshold: 3
+            commentPromptHintingType: FULL
+            disableHintingUntil5Words: true
+            pearModeName: "Pear mode?"
+            thinkingBubble: true
+            softPrompt: true
+            emptyCommentSoftPrompt: true
+            minImageCount: 3
+            maxImageCount: 5
         }
     ) {
         __typename
@@ -59,13 +66,21 @@ mutation createTextPrompt {
         replayStrategy
         ghostText
         mask
-        # Text prompt
-        minLength
+
+        # Numeric prompt specific
+        maxRecordTime
+        endAfter5sSilence
         maxLength
-        encoding
-        encodeString
-        validationType
-        renderType
-        multiBoxData
+        useStrengthMeter
+        wordTarget
+        hintingThreshold
+        commentPromptHintingType
+        disableHintingUntil5Words
+        pearModeName
+        thinkingBubble
+        softPrompt
+        emptyCommentSoftPrompt
+        minImageCount
+        maxImageCount
     }
 }

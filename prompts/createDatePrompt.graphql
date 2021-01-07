@@ -1,9 +1,9 @@
-mutation createTextPrompt {
-    createTextPrompt(
+mutation createDatePrompt {
+    createDatePrompt(
         data: {
             name: "Car Model2"
             organization: { id: "941" }
-            externalId: 10
+            externalId: 11
             dataField: { id: "1" }
             cssIdentifier: "Some CSS"
             audioScript: "Some audio script"
@@ -20,14 +20,10 @@ mutation createTextPrompt {
             replayStrategy: STAR
             repromptLimit: 2
             defaultDisabledSurveyPrompt: true
-            # Text prompt specific
-            minLength: 10
-            maxLength: 100
-            encoding: ASCII
-            encodeString: "Some encode string"
-            validationType: EMAIL
-            renderType: MASKING_PLACEHOLDER
-            multiBoxData: "What is multibox data?"
+            # Date prompt specific
+            customDatePattern: "Some pattern"
+            datePatternType: MMDDYYYY
+            dateSelectionOverride: ALLOW_FUTURE_DATE_INPUT
         }
     ) {
         __typename
@@ -59,13 +55,10 @@ mutation createTextPrompt {
         replayStrategy
         ghostText
         mask
-        # Text prompt
-        minLength
-        maxLength
-        encoding
-        encodeString
-        validationType
-        renderType
-        multiBoxData
+
+        # Date prompt specific
+        customDatePattern
+        datePatternType
+        dateSelectionOverride
     }
 }
