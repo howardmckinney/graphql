@@ -1,18 +1,18 @@
-mutation createSurvey_v2 {
+mutation createSurvey {
     createSurvey(
         data: {
-            name: "Hertz Survey3"
+            name: "Hertz Survey"
             description: "Tell us about your trip"
             organization: { id: "1" }
             useStarRepeat: true
             feedbackChannel: { id: 2 }
-            externalId: "1"
+            externalId: "11"
             transferOffsite: false
             pages: [
                 {
                     create: {
                         name: "Check-in"
-                        pageTitle: "Tell us about your check-in experience"
+                        title: "Tell us about your check-in experience"
                         prompts: [{ id: 1 }]
                         displayNextButton: true
                         displayPreviousButton: false
@@ -22,8 +22,8 @@ mutation createSurvey_v2 {
                 {
                     create: {
                         name: "Trip"
-                        pageTitle: "Tell us about your car"
-                        prompts: [{ id: 1 }]
+                        title: "Tell us about your car"
+                        prompts: [{ id: 4 }]
                         displayNextButton: true
                         displayPreviousButton: true
                         completionPoint: false
@@ -32,8 +32,8 @@ mutation createSurvey_v2 {
                 {
                     create: {
                         name: "Drop-off"
-                        pageTitle: "Tell us about your drop-off experience"
-                        prompts: [{ id: 1 }, { id: 2 }, { id: 3 }]
+                        title: "Tell us about your drop-off experience"
+                        prompts: [{ id: 5 }, { id: 6 }]
                         displayNextButton: false
                         displayPreviousButton: true
                         completionPoint: true
@@ -60,7 +60,7 @@ mutation createSurvey_v2 {
                 node {
                     id
                     name
-                    pageTitle
+                    title
                     displayPreviousButton
                     displayNextButton
                     completionPoint
@@ -71,12 +71,12 @@ mutation createSurvey_v2 {
                                 __typename
                                 id
                                 name
-#                                dataField {
-#                                    id
-#                                }
-#                                organization {
-#                                    id
-#                                }
+                                dataField {
+                                    id
+                                }
+                                organization {
+                                    id
+                                }
                             }
                         }
                     }

@@ -1,0 +1,45 @@
+mutation createLogicPrompt {
+    createLogicPrompt(
+        data: {
+            name: "Logic Prompt"
+            organization: { id: 1 }
+            externalId: 34
+            dataField: { id: "450" }
+            repromptLimit: 101
+            audioScript: "Audio script"
+            webText: "Web text"
+            allowBargeIn: true
+            confirm: true
+            required: true
+            showRequiredMarker: true
+            mask: "Mask"
+            ghostText: "Ghost text"
+            cssIdentifier: "CSS"
+            checkDigitStrategy: BUSTED_MICROS
+            replayStrategy: SURVEY
+        }
+    ) {
+        __typename
+        id
+        name
+        organization {
+            id
+        }
+        externalId
+        dataField {
+            id
+        }
+        repromptLimit
+        audioScript
+        webText
+        allowBargeIn
+        confirm
+        required
+        showRequiredMarker
+        mask
+        ghostText
+        cssIdentifier
+        checkDigitStrategy
+        replayStrategy
+    }
+}

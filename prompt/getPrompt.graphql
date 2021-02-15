@@ -1,5 +1,5 @@
 query getPrompt {
-    prompt(id: "432378") {
+    prompt(id: 7) {
         __typename
         id
         name
@@ -10,11 +10,15 @@ query getPrompt {
             id
         }
         externalId
-        phrases {
-            id
-        }
         events {
-            id
+            totalCount
+            edges {
+                node {
+                    __typename
+                    id
+                    name
+                }
+            }
         }
         cssIdentifier
         audioScript
@@ -30,29 +34,32 @@ query getPrompt {
         ghostText
         mask
         ... on TextPrompt {
+            __typename
             minLength
             maxLength
             encoding
             encodeString
             validationType
-            renderType
-            audioScript
+            textPromptRenderType: renderType
             multiBoxData
         }
         ... on DatePrompt {
+            __typename
             customDatePattern
             datePatternType
             dateSelectionOverride
         }
         ... on NumericPrompt {
+            __typename
             minLength
             maxLength
             isCurrency
             forcedDecimalPlaces
-            renderType
+            textPromptRenderType: renderType
             multiBoxData
         }
         ... on CommentPrompt {
+            __typename
             maxRecordTime
             endAfter5sSilence
             maxLength
@@ -67,6 +74,33 @@ query getPrompt {
             emptyCommentSoftPrompt
             minImageCount
             maxImageCount
+        }
+        ... on ReadOnlyPrompt {
+            __typename
+            outputDataField {
+                __typename
+                id
+            }
+        }
+        ... on RatingPrompt {
+            __typename
+            choices {
+                id
+            }
+            allowVoiceAnswer
+            reverseChoices
+            renderType
+            autoAdvance
+        }
+        ... on MultipleChoicePrompt {
+            __typename
+            choices {
+                id
+            }
+            allowVoiceAnswer
+            reverseChoices
+            renderType
+            autoAdvance
         }
     }
 }

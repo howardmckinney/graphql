@@ -1,0 +1,67 @@
+query getSurvey {
+    surveys (
+        where: { name_contains: "survey", organization: { id_in: [1, 2] } }
+        # where: {
+        #   page: {
+        #       id: 1
+        #       name_contains: "Survey Page 1"
+        #       cssIdentifier_contains: "css"
+        #   }
+        # }
+        orderBy: [id_asc, externalId_asc, name_asc]
+        # first: 10
+        # offset: 0
+    ) {
+        totalCount
+        edges {
+            node {
+                id
+                name
+                description
+                organization {
+                    id
+                }
+                externalId
+                feedbackChannel {
+                    id
+                }
+                useStarRepeat
+                transferOffsite
+                pages {
+                    totalCount
+                    edges {
+                        node {
+                            id
+                            name
+                            title
+                            cssIdentifier
+                            sidebarImage {
+                                id
+                            }
+                            displayNextButton
+                            displayPreviousButton
+                            completionPoint
+                            prompts {
+                                totalCount
+                                edges {
+                                    node {
+                                        __typename
+                                        id
+                                        name
+                                        externalId
+                                        organization {
+                                            id
+                                        }
+                                        dataField {
+                                            id
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

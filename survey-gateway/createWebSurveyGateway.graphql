@@ -1,0 +1,80 @@
+mutation createWebSurveyGateway {
+    createWebSurveyGateway(
+        data: {
+            name: "PDFMaker Survey"
+            alias: "pdfmaker"
+            description: "PDFMaker Survey Gateway"
+            organization: { id: "1" }
+            externalId: 1
+            failurePrompt: { id: 1}
+            disableDigitalFingerprinting: true
+            disabledLocationSurvey: {id: 1}
+            disableOfferCodeFailureRateLimit: true
+            attemptLocationLookup: true
+            extendSurveyTimeout: true
+            adaWcagAccessible: false
+            webSurveyTheme: { id: 1}
+            forceHttps: true
+            pages: {
+                create: {
+                    name: "Check-in"
+                    title: "Tell us about your check-in experience"
+                    prompts: [{ id: 1 }]
+                    displayNextButton: true
+                    displayPreviousButton: false
+                    completionPoint: true
+                }
+                update: {
+                    id: 2
+                    data: {
+                        name: "Updated survey page"
+                        title: "Tell us about your car2"
+                        displayNextButton: true
+                        displayPreviousButton: false
+                        completionPoint: true
+                        prompts: [{ id: 1 }, { id: 2 }]
+                    }
+                }
+                connect: { id: 3}
+            }
+
+            # WebSurvey specific fields
+            inbound: true
+            allowIndexing: true
+            captchaType: BOTDETECT
+            refreshInterval: 3
+            gdprEnabled: false
+        }) {
+        __typename
+        id
+        name
+        description
+        externalId
+        alias
+        failurePrompt {
+            id
+            name
+        }
+        disableDigitalFingerprinting
+        disableOfferCodeFailureRateLimit
+        attemptLocationLookup
+        extendSurveyTimeout
+        adaWcagAccessible
+        forceHttps
+        webSurveyTheme {
+            id
+            name
+        }
+        disabledLocationSurvey {
+            id
+            name
+        }
+
+        # WebSurvey specific fields
+        inbound
+        allowIndexing
+        captchaType
+        refreshInterval
+        gdprEnabled
+    }
+}

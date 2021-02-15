@@ -1,0 +1,14 @@
+query getOffer {
+    offer(id: 2) {
+        id
+        name
+        description
+        externalId
+        organization {
+            id
+        }
+        feedbackChannel {
+            id
+        }
+    }
+}

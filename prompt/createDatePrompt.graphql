@@ -1,0 +1,56 @@
+mutation createDatePrompt {
+    createDatePrompt(
+        data: {
+            name: "Car Model"
+            organization: { id: "1" }
+            externalId: 10
+            dataField: { id: "451" }
+            cssIdentifier: "Some CSS"
+            audioScript: "Some audio script"
+            webText: "Some web text"
+            checkDigitStrategy: BUSTED_MICROS
+            allowBargeIn: true
+            confirm: true
+            required: true
+            showRequiredMarker: true
+            ghostText: "My ghost text"
+            mask: "My mask"
+            replayStrategy: STAR
+            repromptLimit: 2
+
+            # Date prompt specific
+            customDatePattern: "MM/DD/YY"
+            datePatternType: MMDDYYYY
+            dateSelectionOverride: ALLOW_FUTURE_DATE_INPUT
+        }
+    ) {
+        __typename
+        id
+        name
+        organization {
+            id
+        }
+        externalId
+        dataField {
+            id
+        }
+        cssIdentifier
+        audioScript
+        webText
+        allowBargeIn
+        repromptLimit
+        confirm
+        required
+        defaultDisabledSurveyPrompt
+        showRequiredMarker
+        checkDigitStrategy
+        replayStrategy
+        ghostText
+        mask
+
+        # Date prompt specific
+        customDatePattern
+        datePatternType
+        dateSelectionOverride
+    }
+}

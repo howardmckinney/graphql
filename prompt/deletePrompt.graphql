@@ -1,5 +1,6 @@
 mutation deletePrompt {
-    deletePrompt(id: "1") {
+    deletePrompt(id: "3") {
+        __typename
         id
         name
         organization {

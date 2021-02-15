@@ -1,0 +1,10 @@
+mutation offerCode {
+    deleteOfferCode(id: 2) {
+        id
+        offerCode
+        offer {
+            id
+            name
+        }
+    }
+}

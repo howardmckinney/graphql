@@ -11,21 +11,50 @@ interface Prompt {
     checkDigitStrategy: CheckDigitStrategyEnum
     confirm: Boolean
     cssIdentifier: String
-    dataField: DataField!
+    dataField: DataField
     defaultDisabledSurveyPrompt: Boolean
-    events: [PromptEvent!]
+    events: PromptEventConnection!
     externalId: ID
     ghostText: String
     id: ID
     mask: String
     name: String!
     organization: Organization!
-    phrases: [PromptPhrase!]
     replayStrategy: ReplayStrategyEnum
     repromptLimit: Int
     required: Boolean
     showRequiredMarker: Boolean
     webText: String
+}
+
+interface PromptEventTrigger {
+    id: ID
+}
+
+interface SurveyGateway {
+    adaWcagAccessible: Boolean
+    alias: String
+    attemptLocationLookup: Boolean
+    defaultOfferCode: OfferCode
+    description: String
+    disableDigitalFingerprinting: Boolean
+    disableOfferCodeFailureRateLimit: Boolean
+    disabledLocationSurvey: Survey
+    extendSurveyTimeout: Boolean
+    externalId: ID
+    failurePrompt: Prompt
+    forceHttps: Boolean
+    id: ID
+    name: String
+    organization: Organization
+    pages: SurveyPageConnection
+    parameters: SurveyGatewayParameterConnection
+    webSurveyTheme: WebSurveyTheme
+}
+
+type Campaign {
+    id: ID!
+    name: String!
 }
 
 type CommentPrompt implements Prompt {
@@ -40,7 +69,7 @@ type CommentPrompt implements Prompt {
     disableHintingUntil5Words: Boolean
     emptyCommentSoftPrompt: Boolean
     endAfter5sSilence: Boolean
-    events: [PromptEvent!]
+    events: PromptEventConnection!
     externalId: ID
     ghostText: String
     hintingThreshold: Int
@@ -53,7 +82,6 @@ type CommentPrompt implements Prompt {
     name: String!
     organization: Organization!
     pearModeName: String
-    phrases: [PromptPhrase!]
     replayStrategy: ReplayStrategyEnum
     repromptLimit: Int
     required: Boolean
@@ -66,11 +94,21 @@ type CommentPrompt implements Prompt {
 }
 
 type DataField {
-    id: ID
+    id: ID!
 }
 
 type DataFieldOption {
+    id: ID!
+}
+
+type DataFieldPromptEventTrigger implements PromptEventTrigger {
+    dataField: DataField!
+    fieldOptions: [DataFieldOption!]
     id: ID
+    operatorType: PromptEventTriggerOperator!
+    parseRule: PromptEventTriggerParseRule
+    parseRuleOptions: PromptEventTriggerParseRule
+    value: String
 }
 
 type DatePrompt implements Prompt {
@@ -84,14 +122,13 @@ type DatePrompt implements Prompt {
     datePatternType: DatePatternTypeEnum
     dateSelectionOverride: DateSelectionOverrideEnum
     defaultDisabledSurveyPrompt: Boolean
-    events: [PromptEvent!]
+    events: PromptEventConnection!
     externalId: ID
     ghostText: String
     id: ID
     mask: String
     name: String!
     organization: Organization!
-    phrases: [PromptPhrase!]
     replayStrategy: ReplayStrategyEnum
     repromptLimit: Int
     required: Boolean
@@ -99,8 +136,42 @@ type DatePrompt implements Prompt {
     webText: String
 }
 
-type FeedbackChannel {
+type DefaultPromptEventTrigger implements PromptEventTrigger {
     id: ID
+}
+
+type FeedbackChannel {
+    id: ID!
+}
+
+type Image {
+    id: ID
+}
+
+type Location {
+    id: ID!
+}
+
+type LogicPrompt implements Prompt {
+    allowBargeIn: Boolean
+    audioScript: String
+    checkDigitStrategy: CheckDigitStrategyEnum
+    confirm: Boolean
+    cssIdentifier: String
+    dataField: DataField!
+    defaultDisabledSurveyPrompt: Boolean
+    events: PromptEventConnection!
+    externalId: ID
+    ghostText: String
+    id: ID
+    mask: String
+    name: String!
+    organization: Organization!
+    replayStrategy: ReplayStrategyEnum
+    repromptLimit: Int
+    required: Boolean
+    showRequiredMarker: Boolean
+    webText: String
 }
 
 type MultipleChoicePrompt implements Prompt {
@@ -114,14 +185,13 @@ type MultipleChoicePrompt implements Prompt {
     cssIdentifier: String
     dataField: DataField!
     defaultDisabledSurveyPrompt: Boolean
-    events: [PromptEvent!]
+    events: PromptEventConnection!
     externalId: ID
     ghostText: String
     id: ID
     mask: String
     name: String!
     organization: Organization!
-    phrases: [PromptPhrase!]
     renderType: CategoricalPromptRenderEnum
     replayStrategy: ReplayStrategyEnum
     repromptLimit: Int
@@ -132,23 +202,107 @@ type MultipleChoicePrompt implements Prompt {
 }
 
 type Mutation {
-    createCommentPrompt(data: CreateCommentPromptInput): CommentPrompt
-    createDatePrompt(data: CreateDatePromptInput): DatePrompt
-    createMultipleChoicePrompt(data: CreateMultipleChoicePromptInput): MultipleChoicePrompt
-    createNumericPrompt(data: CreateNumericPromptInput): NumericPrompt
+    "DEV-544"
+    addDatafieldPromptEventTriggerToPromptEvent(data: CreateDataFieldPromptEventTrigger!, id: ID!, triggerRuleOperator: PromptEventTriggerRuleOperator!): DataFieldPromptEventTrigger
+    "DEV-544"
+    addDefaultPromptEventTriggerToPromptEvent(id: ID!, triggerRuleOperator: PromptEventTriggerRuleOperator!): DefaultPromptEventTrigger
+    """
+
+    Add an offerSurvey to the Offer.
+
+    id: Id of Offer.
+    data: offerSurvey to be added.
+    """
+    addOfferSurveyToOffer(data: CreateOfferSurveyInput!, id: ID!): OfferSurvey
+    """
+
+    TODO: DEV-542
+
+    Add a prompt event to a prompt object.
+
+    id: id of prompt
+    data: prompt event details to be created.
+    """
+    addPromptEventToPrompt(data: CreatePromptEvent!, id: ID!): PromptEvent
+    """
+
+    Add a SurveyGatewayParameter to the specified SurveyGateway.
+    id: ID of SurveyGateway
+    data: parameter values for the SurveyGatewayParameter
+    """
+    addSurveyGatewayParameterToSurveyGateway(data: CreateSurveyGatewayParameter!, surveyGatewayId: ID!): SurveyGatewayParameter
+    createCommentPrompt(data: CreateCommentPromptInput!): CommentPrompt
+    createDatePrompt(data: CreateDatePromptInput!): DatePrompt
+    createLogicPrompt(data: CreateLogicPromptInput!): LogicPrompt
+    createMultipleChoicePrompt(data: CreateMultipleChoicePromptInput!): MultipleChoicePrompt
+    createNumericPrompt(data: CreateNumericPromptInput!): NumericPrompt
+    createOffer(data: CreateOfferInput!): Offer
+    """
+
+    Note: Remove this comment after implementing.
+    When creating an OfferCode, it does not contain an organization.
+    Instead organization is determined by what location and offer is attached to the OfferCode.
+    We will have to query and make sure the organizations match.
+    """
+    createOfferCode(data: CreateOfferCodeInput): OfferCode
     createRatingPrompt(data: CreateRatingPromptInput): RatingPrompt
-    createSurvey(data: CreateSurveyInput): Survey
-    createTextPrompt(data: CreateTextPromptInput): TextPrompt
+    createReadOnlyPrompt(data: CreateReadOnlyPromptInput!): ReadOnlyPrompt
+    createSurvey(data: CreateSurveyInput!): Survey
+    createTextPrompt(data: CreateTextPromptInput!): TextPrompt
+    createWebServiceWebSurveyGateway(data: CreateWebServiceWebSurveyGatewayInput!): WebServiceWebSurveyGateway
+    createWebSurveyGateway(data: CreateWebSurveyGatewayInput!): WebSurveyGateway
+    deleteOffer(id: ID!): Offer
+    """
+
+    Note: Remove this comment after implementing.
+    When deleting an OfferCode, it does not contain an organization.
+    Instead organization is determined by what location and offer is attached to the OfferCode.
+    We will have to verify the use has access to the organizations.
+    """
+    deleteOfferCode(id: ID!): OfferCode
+    """
+
+    Delete an OfferSurvey.
+
+    id: Id of an OfferSurvey.
+    """
+    deleteOfferSurveyFromOffer(id: ID!): OfferSurvey
     deletePrompt(id: ID!): Prompt
     deleteSurvey(id: ID!): Survey
-    updateCommentPrompt(data: UpdateCommentPromptInput, id: ID!): CommentPrompt
-    updateDatePrompt(data: UpdateDatePromptInput, id: ID!): DatePrompt
-    updateMultipleChoicePrompt(data: UpdateMultipleChoicePromptInput, id: ID!): MultipleChoicePrompt
-    updateNumericPrompt(data: UpdateNumericPromptInput, id: ID!): NumericPrompt
-    updatePage(data: CreateSurveyPageInput, id: ID!): SurveyPage
+    deleteSurveyGateway(id: ID!): SurveyGateway
+    """
+
+    Delete a SurveyGatewayParameter from the SurveyGateway
+    id: ID of SurveyGatewayParameter
+    """
+    deleteSurveyGatewayParameter(id: ID!): SurveyGatewayParameter
+    updateCommentPrompt(data: UpdateCommentPromptInput!, id: ID!): CommentPrompt
+    updateDatePrompt(data: UpdateDatePromptInput!, id: ID!): DatePrompt
+    updateLogicPrompt(data: UpdateLogicPromptInput!, id: ID!): LogicPrompt
+    updateMultipleChoicePrompt(data: UpdateMultipleChoicePromptInput!, id: ID!): MultipleChoicePrompt
+    updateNumericPrompt(data: UpdateNumericPromptInput!, id: ID!): NumericPrompt
+    updateOffer(data: UpdateOfferInput!, id: ID!): Offer
+    """
+
+    Update an OfferSurvey.
+
+    id: Id of an OfferSurvey.
+    data: offerSurvey to be added.
+    """
+    updateOfferSurvey(data: UpdateOfferSurveyInput!, id: ID!): OfferSurvey
     updateRatingPrompt(data: UpdateRatingPromptInput, id: ID!): RatingPrompt
-    updateSurvey(data: UpdateSurveyInput, id: ID!): Survey
-    updateTextPrompt(data: UpdateTextPromptInput, id: ID!): TextPrompt
+    updateReadOnlyPrompt(data: UpdateReadOnlyPromptInput!, id: ID!): ReadOnlyPrompt
+    updateSurvey(data: UpdateSurveyInput!, id: ID!): Survey
+    """
+
+    Update a SurveyGatewayParameter
+    id: ID of SurveyGatewayParameter
+    data: parameter values for the SurveyGatewayParameter
+    """
+    updateSurveyGatewayParameter(data: UpdateSurveyGatewayParameter!, id: ID!): SurveyGatewayParameter
+    updateTextPrompt(data: UpdateTextPromptInput!, id: ID!): TextPrompt
+    updateWebServiceWebSurveyGateway(data: UpdateWebServiceWebSurveyGatewayInput!, id: ID!): WebServiceWebSurveyGateway
+    updateWebSurveyGateway(data: UpdateWebSurveyGatewayInput!, id: ID!): WebSurveyGateway
 }
 
 type NumericPrompt implements Prompt {
@@ -159,7 +313,7 @@ type NumericPrompt implements Prompt {
     cssIdentifier: String
     dataField: DataField!
     defaultDisabledSurveyPrompt: Boolean
-    events: [PromptEvent!]
+    events: PromptEventConnection!
     externalId: ID
     forcedDecimalPlaces: DecimalOptionEnum
     ghostText: String
@@ -171,7 +325,6 @@ type NumericPrompt implements Prompt {
     multiBoxData: String
     name: String!
     organization: Organization!
-    phrases: [PromptPhrase!]
     renderType: TextPromptRenderEnum
     replayStrategy: ReplayStrategyEnum
     repromptLimit: Int
@@ -180,8 +333,87 @@ type NumericPrompt implements Prompt {
     webText: String
 }
 
+type Offer {
+    description: String
+    externalId: String
+    feedbackChannel: FeedbackChannel!
+    id: ID!
+    name: String!
+    offerSurveys: OfferSurveysConnection!
+    organization: Organization!
+}
+
+type OfferCode {
+    "This excludes the W from the redemption code on alerted surveys"
+    excludeWIdentifier: Boolean!
+    externalId: String
+    generationState: GenerationState!
+    id: ID!
+    introPrompt: Prompt
+    location: Location!
+    offer: Offer!
+    offerCode: String!
+    redemptionCodeType: RedemptionCodeType!
+    redemptionCodeTypeFilter: String
+    surveyGateway: SurveyGateway!
+}
+
+type OfferCodesConnection {
+    edges: [OfferCodesEdge!]!
+    totalCount: Int!
+}
+
+type OfferCodesEdge {
+    node: OfferCode!
+}
+
+type OfferSurvey {
+    frequencyWeight: Int!
+    id: ID!
+    survey: Survey!
+}
+
+type OfferSurveysConnection {
+    edges: [OfferSurveysEdge!]!
+    totalCount: Int!
+}
+
+type OfferSurveysEdge {
+    node: OfferSurvey!
+}
+
+type OffersConnection {
+    edges: [OffersEdge!]!
+    totalCount: Int!
+}
+
+type OffersEdge {
+    node: Offer!
+}
+
 type Organization {
+    id: ID!
+}
+
+type PooledVoiceSurveyGateway implements SurveyGateway {
+    adaWcagAccessible: Boolean
+    alias: String
+    attemptLocationLookup: Boolean
+    defaultOfferCode: OfferCode
+    description: String
+    disableDigitalFingerprinting: Boolean
+    disableOfferCodeFailureRateLimit: Boolean
+    disabledLocationSurvey: Survey
+    extendSurveyTimeout: Boolean
+    externalId: ID
+    failurePrompt: Prompt
+    forceHttps: Boolean
     id: ID
+    name: String
+    organization: Organization
+    pages: SurveyPageConnection
+    parameters: SurveyGatewayParameterConnection
+    webSurveyTheme: WebSurveyTheme
 }
 
 type PromptChoice {
@@ -206,7 +438,32 @@ type PromptEdge {
 }
 
 type PromptEvent {
+    actions: [PromptEventAction!]
+    description: String
     id: ID
+    name: String
+    surveyInit: Boolean
+    triggerRuleOperator: PromptEventTriggerRuleOperator
+    triggers: [PromptEventTrigger!]
+}
+
+type PromptEventAction {
+    id: ID
+}
+
+type PromptEventConnection {
+    edges: [PromptEventEdge!]!
+    totalCount: Int!
+}
+
+type PromptEventEdge {
+    node: PromptEvent!
+}
+
+type PromptEventTriggerParseRuleOptions {
+    id: ID!
+    numberCharacters: Int
+    startCharacter: Int
 }
 
 type PromptPhrase {
@@ -215,10 +472,18 @@ type PromptPhrase {
 
 type Query {
     _service: _Service!
+    offer(id: ID!): Offer
+    offerCode(id: ID!): OfferCode
+    offerCodes(first: Int! = 10, offset: Int! = 0, orderBy: [OfferCodeOrderBy!]! = [offerCode_asc], where: OfferCodesWhereInput!): OfferCodesConnection
+    offers(first: Int! = 10, offset: Int! = 0, orderBy: [OfferOrderBy!]! = [name_asc], where: OffersWhereInput!): OffersConnection
     prompt(id: ID!): Prompt
-    prompts(first: Int, offset: Int, orderBy: [PromptsOrderBy!], where: PromptsWhereInput!): PromptConnection
+    prompts(first: Int! = 10, offset: Int! = 0, orderBy: [PromptsOrderBy!]! = [name_asc], where: PromptsWhereInput!): PromptConnection
     survey(id: ID!): Survey
-    surveys(first: Int, offset: Int, orderBy: [SurveyOrderBy], where: SurveysWhereInput!): SurveyConnection
+    surveyGateway(id: ID!): SurveyGateway
+    surveyGateways(first: Int! = 10, offset: Int! = 0, orderBy: [SurveyGatewayOrderBy!]! = [name_asc], where: SurveyGatewaysWhereInput): SurveyGatewayConnection
+    surveys(first: Int! = 10, offset: Int! = 0, orderBy: [SurveyOrderBy!]! = [name_asc], where: SurveysWhereInput!): SurveyConnection
+    webSurveyTheme(id: ID!): WebSurveyTheme
+    webSurveyThemes(first: Int! = 10, offset: Int! = 0, orderBy: [WebSurveyThemeOrderByInput!]! = [name_asc], where: WebSurveyThemeWhereInput!): WebSurveyThemeConnection
 }
 
 type RatingPrompt implements Prompt {
@@ -232,19 +497,41 @@ type RatingPrompt implements Prompt {
     cssIdentifier: String
     dataField: DataField!
     defaultDisabledSurveyPrompt: Boolean
-    events: [PromptEvent!]
+    events: PromptEventConnection!
     externalId: ID
     ghostText: String
     id: ID
     mask: String
     name: String!
     organization: Organization!
-    phrases: [PromptPhrase!]
     renderType: CategoricalPromptRenderEnum
     replayStrategy: ReplayStrategyEnum
     repromptLimit: Int
     required: Boolean
     reverseChoices: Boolean
+    showRequiredMarker: Boolean
+    webText: String
+}
+
+type ReadOnlyPrompt implements Prompt {
+    allowBargeIn: Boolean
+    audioScript: String
+    checkDigitStrategy: CheckDigitStrategyEnum
+    confirm: Boolean
+    cssIdentifier: String
+    dataField: DataField
+    defaultDisabledSurveyPrompt: Boolean
+    events: PromptEventConnection!
+    externalId: ID
+    ghostText: String
+    id: ID
+    mask: String
+    name: String!
+    organization: Organization!
+    outputDataField: DataField
+    replayStrategy: ReplayStrategyEnum
+    repromptLimit: Int
+    required: Boolean
     showRequiredMarker: Boolean
     webText: String
 }
@@ -270,6 +557,33 @@ type SurveyEdge {
     node: Survey!
 }
 
+type SurveyGatewayConnection {
+    edges: [SurveyGatewayEdge!]!
+    totalCount: Int
+}
+
+type SurveyGatewayEdge {
+    node: SurveyGateway!
+}
+
+type SurveyGatewayParameter {
+    alias: String!
+    defaultValue: String
+    id: ID!
+    prompt: Prompt!
+    required: Boolean!
+    sourceType: SurveyGatewayParameterSourceType!
+}
+
+type SurveyGatewayParameterConnection {
+    edges: [SurveyGatewayParameterEdge!]!
+    totalCount: Int
+}
+
+type SurveyGatewayParameterEdge {
+    node: SurveyGatewayParameter!
+}
+
 type SurveyPage {
     completionPoint: Boolean
     cssIdentifier: String
@@ -277,14 +591,14 @@ type SurveyPage {
     displayPreviousButton: Boolean
     id: ID
     name: String!
-    pageTitle: String
     prompts: PromptConnection
-    sidebarImageId: ID
+    sidebarImage: Image
+    title: String
 }
 
 type SurveyPageConnection {
     edges: [SurveyPageEdge!]!
-    totalCount: Int!
+    totalCount: Int
 }
 
 type SurveyPageEdge {
@@ -301,7 +615,7 @@ type TextPrompt implements Prompt {
     defaultDisabledSurveyPrompt: Boolean
     encodeString: String
     encoding: EncodingEnum
-    events: [PromptEvent!]
+    events: PromptEventConnection!
     externalId: ID
     ghostText: String
     id: ID
@@ -311,7 +625,6 @@ type TextPrompt implements Prompt {
     multiBoxData: String
     name: String!
     organization: Organization!
-    phrases: [PromptPhrase!]
     renderType: TextPromptRenderEnum
     replayStrategy: ReplayStrategyEnum
     repromptLimit: Int
@@ -319,6 +632,204 @@ type TextPrompt implements Prompt {
     showRequiredMarker: Boolean
     validationType: ValidationTypeEnum
     webText: String
+}
+
+type ThemeSettings {
+    alertColor: String
+    backButtonDisplay: CssDisplayPropertyEnum
+    booleanCheckboxCorners: Int
+    booleanCheckboxCornersUnit: CssUnitEnum
+    booleanTextColor: String
+    booleanTextColorHover: String
+    booleanTextColorSelected: String
+    booleanTextColorSelectedHover: String
+    buttonBgColorHover: String
+    buttonBorder: Int
+    buttonBorderColor: String
+    buttonBorderState: CssBorderPropertyEnum
+    buttonBorderUnit: CssUnitEnum
+    buttonCorners: Int
+    buttonCornersUnit: CssUnitEnum
+    buttonFontSize: Int
+    buttonFontSizeUnit: CssUnitEnum
+    buttonHoverBorder: Int
+    buttonHoverBorderColor: String
+    buttonHoverBorderState: CssBorderPropertyEnum
+    buttonHoverBorderUnit: CssUnitEnum
+    buttonPaddingBottom: Int
+    buttonPaddingBottomUnit: CssUnitEnum
+    buttonPaddingLeft: Int
+    buttonPaddingLeftUnit: CssUnitEnum
+    buttonPaddingRight: Int
+    buttonPaddingRightUnit: CssUnitEnum
+    buttonPaddingTop: Int
+    buttonPaddingTopUnit: CssUnitEnum
+    buttonTextColor: String
+    buttonTextColorHover: String
+    checkboxBgColor: String
+    checkboxBgColorHover: String
+    checkboxBgColorSelected: String
+    checkboxBorder: Int
+    checkboxBorderColor: String
+    checkboxBorderHover: Int
+    checkboxBorderHoverColor: String
+    checkboxBorderHoverState: CssBorderPropertyEnum
+    checkboxBorderHoverUnit: CssUnitEnum
+    checkboxBorderSelected: Int
+    checkboxBorderSelectedColor: String
+    checkboxBorderSelectedState: CssBorderPropertyEnum
+    checkboxBorderSelectedUnit: CssUnitEnum
+    checkboxBorderState: CssBorderPropertyEnum
+    checkboxBorderUnit: CssUnitEnum
+    checkmarkColor: String
+    contentMaxWidth: Int
+    contentMaxWidthUnit: CssUnitEnum
+    contentWidth: Int
+    contentWidthUnit: CssUnitEnum
+    darkZebraStripe: String
+    darkZebraStripeText: String
+    entryFieldBgColor: String
+    entryFieldBorder: Int
+    entryFieldBorderColor: String
+    entryFieldBorderState: CssBorderPropertyEnum
+    entryFieldBorderUnit: CssUnitEnum
+    entryFieldCorners: Int
+    entryFieldCornersUnit: CssUnitEnum
+    entryFieldTextColor: String
+    fontSizeBase: Int
+    fontSizeBaseUnit: CssUnitEnum
+    footerBar: CssDisplayPropertyEnum
+    footerBarColor: String
+    footerBgColor: String
+    footerHeight: Int
+    footerHeightUnit: CssUnitEnum
+    footerLinkColor: String
+    footerLinkColorHover: String
+    footerMaxWidth: Int
+    footerMaxWidthUnit: CssUnitEnum
+    footerPaddingBottom: Int
+    footerPaddingBottomUnit: CssUnitEnum
+    footerPaddingLeft: Int
+    footerPaddingLeftUnit: CssUnitEnum
+    footerPaddingRight: Int
+    footerPaddingRightUnit: CssUnitEnum
+    footerPaddingTop: Int
+    footerPaddingTopUnit: CssUnitEnum
+    footerTextColor: String
+    footerWidth: Int
+    footerWidthUnit: CssUnitEnum
+    footerlinkUnderline: CssUnderlinePropertyEnum
+    footerlinkUnderlineHover: CssUnderlinePropertyEnum
+    headerBgColor: String
+    headerMaxWidth: Int
+    headerMaxWidthUnit: CssUnitEnum
+    headerPaddingBottom: Int
+    headerPaddingBottomUnit: CssUnitEnum
+    headerPaddingLeft: Int
+    headerPaddingLeftUnit: CssUnitEnum
+    headerPaddingRight: Int
+    headerPaddingRightUnit: CssUnitEnum
+    headerPaddingTop: Int
+    headerPaddingTopUnit: CssUnitEnum
+    headerWidth: Int
+    headerWidthUnit: CssUnitEnum
+    id: ID
+    inMomentLogoBackgroundColor: String
+    inMomentLogoBgCorners: Int
+    inMomentLogoBgCornersUnit: CssUnitEnum
+    inMomentLogoPaddingBottom: Int
+    inMomentLogoPaddingLeft: Int
+    inMomentLogoPaddingRight: Int
+    inMomentLogoPaddingTop: Int
+    inMomentLogoPaddingUnitBottom: CssUnitEnum
+    inMomentLogoPaddingUnitLeft: CssUnitEnum
+    inMomentLogoPaddingUnitRight: CssUnitEnum
+    inMomentLogoPaddingUnitTop: CssUnitEnum
+    inlineBar: String
+    lightZebraStripe: String
+    lightZebraStripeText: String
+    linkColor: String
+    linkColorHover: String
+    linkUnderline: CssUnderlinePropertyEnum
+    linkUnderlineHover: CssUnderlinePropertyEnum
+    logoBar: CssDisplayPropertyEnum
+    logoBarColor: String
+    logoBottomMargin: Int
+    logoBottomMarginUnit: CssUnitEnum
+    logoHeight: Int
+    logoHeightUnit: CssUnitEnum
+    logoPaddingBottom: Int
+    logoPaddingBottomUnit: CssUnitEnum
+    logoPaddingLeft: Int
+    logoPaddingLeftUnit: CssUnitEnum
+    logoPaddingRight: Int
+    logoPaddingRightUnit: CssUnitEnum
+    logoPaddingTop: Int
+    logoPaddingTopUnit: CssUnitEnum
+    optionBgColor: String
+    optionBgColorHover: String
+    optionBgColorSelected: String
+    optionTextColor: String
+    optionTextColorHover: String
+    optionTextColorSelected: String
+    progressBgColor: String
+    progressBorder: Int
+    progressBorderColor: String
+    progressBorderRadius: Int
+    progressBorderRadiusUnit: CssUnitEnum
+    progressBorderState: CssBorderPropertyEnum
+    progressBorderUnit: CssUnitEnum
+    progressHeight: Int
+    progressHeightUnit: CssUnitEnum
+    promptSpacing: Int
+    promptSpacingUnit: CssUnitEnum
+    promptTextArrowDisplay: CssDisplayPropertyEnum
+    promptTextBgColor: String
+    promptTextColor: String
+    promptTextPaddingBottom: Int
+    promptTextPaddingLeft: Int
+    promptTextPaddingRight: Int
+    promptTextPaddingTop: Int
+    promptTextPaddingUnitBottom: CssUnitEnum
+    promptTextPaddingUnitLeft: CssUnitEnum
+    promptTextPaddingUnitRight: CssUnitEnum
+    promptTextPaddingUnitTop: CssUnitEnum
+    promptTextSize: Int
+    promptTextSizeUnit: CssUnitEnum
+    promptTextSpacing: Int
+    promptTextSpacingUnit: CssUnitEnum
+    promptTextWidth: Int
+    promptTextWidthUnit: CssUnitEnum
+    radioButtonBgColor: String
+    radioButtonBgColorHover: String
+    radioButtonBgColorSelected: String
+    radioButtonBorder: Int
+    radioButtonBorderColor: String
+    radioButtonBorderState: CssBorderPropertyEnum
+    radioButtonBorderUnit: CssUnitEnum
+    ratingGroupLabelHeight: Int
+    ratingGroupLabelHeightUnit: CssUnitEnum
+    ratingLabelSize: Int
+    ratingLabelSizeMobile: Int
+    ratingLabelSizeMobileUnit: CssUnitEnum
+    ratingLabelSizeUnit: CssUnitEnum
+    ratingNAoptionTextColorMobile: String
+    ratingOptionBgColor: String
+    ratingOptionBgColorHover: String
+    ratingOptionBgColorSelected: String
+    ratingOptionTextColor: String
+    ratingOptionTextColorHover: String
+    ratingOptionTextColorSelected: String
+    ratingRadioButtonBgColor: String
+    ratingRadioButtonBgColorHover: String
+    ratingRadioButtonBgColorSelected: String
+    ratingRadioButtonBorder: Int
+    ratingRadioButtonBorderColor: String
+    ratingRadioButtonBorderState: CssBorderPropertyEnum
+    ratingRadioButtonBorderUnit: CssUnitEnum
+    surveyBackground: String
+    surveyWidth: Int
+    surveyWidthUnit: CssUnitEnum
 }
 
 type UnknownPrompt implements Prompt {
@@ -329,14 +840,13 @@ type UnknownPrompt implements Prompt {
     cssIdentifier: String
     dataField: DataField!
     defaultDisabledSurveyPrompt: Boolean
-    events: [PromptEvent!]!
+    events: PromptEventConnection!
     externalId: ID
     ghostText: String
     id: ID
     mask: String
     name: String!
     organization: Organization!
-    phrases: [PromptPhrase!]!
     replayStrategy: ReplayStrategyEnum
     repromptLimit: Int
     required: Boolean
@@ -344,9 +854,180 @@ type UnknownPrompt implements Prompt {
     webText: String
 }
 
+type UnknownPromptEventTrigger implements PromptEventTrigger {
+    id: ID
+}
+
+type VoiceSurveyGateway implements SurveyGateway {
+    adaWcagAccessible: Boolean
+    alias: String
+    attemptLocationLookup: Boolean
+    defaultOfferCode: OfferCode
+    description: String
+    disableDigitalFingerprinting: Boolean
+    disableOfferCodeFailureRateLimit: Boolean
+    disabledLocationSurvey: Survey
+    extendSurveyTimeout: Boolean
+    externalId: ID
+    failurePrompt: Prompt
+    forceHttps: Boolean
+    id: ID
+    name: String
+    organization: Organization
+    pages: SurveyPageConnection
+    parameters: SurveyGatewayParameterConnection
+    webSurveyTheme: WebSurveyTheme
+}
+
+type WebServiceOutboundSurveyGateway implements SurveyGateway {
+    adaWcagAccessible: Boolean
+    alias: String
+    attemptLocationLookup: Boolean
+    defaultOfferCode: OfferCode
+    description: String
+    disableDigitalFingerprinting: Boolean
+    disableOfferCodeFailureRateLimit: Boolean
+    disabledLocationSurvey: Survey
+    extendSurveyTimeout: Boolean
+    externalId: ID
+    failurePrompt: Prompt
+    forceHttps: Boolean
+    gdprEnabled: Boolean
+    id: ID
+    name: String
+    organization: Organization
+    pages: SurveyPageConnection
+    parameters: SurveyGatewayParameterConnection
+    webSurveyTheme: WebSurveyTheme
+}
+
+type WebServiceVoiceSurveyGateway implements SurveyGateway {
+    adaWcagAccessible: Boolean
+    alias: String
+    attemptLocationLookup: Boolean
+    defaultOfferCode: OfferCode
+    description: String
+    disableDigitalFingerprinting: Boolean
+    disableOfferCodeFailureRateLimit: Boolean
+    disabledLocationSurvey: Survey
+    extendSurveyTimeout: Boolean
+    externalId: ID
+    failurePrompt: Prompt
+    forceHttps: Boolean
+    id: ID
+    name: String
+    organization: Organization
+    pages: SurveyPageConnection
+    parameters: SurveyGatewayParameterConnection
+    webSurveyTheme: WebSurveyTheme
+}
+
+type WebServiceWebSurveyGateway implements SurveyGateway {
+    adaWcagAccessible: Boolean
+    alias: String
+    attemptLocationLookup: Boolean
+    campaign: Campaign
+    defaultOfferCode: OfferCode
+    description: String
+    disableDigitalFingerprinting: Boolean
+    disableInFlightSurveyCheck: Boolean
+    disableOfferCodeFailureRateLimit: Boolean
+    disabledLocationSurvey: Survey
+    extendSurveyTimeout: Boolean
+    externalId: ID
+    failurePrompt: Prompt
+    forceHttps: Boolean
+    gdprEnabled: Boolean
+    id: ID
+    name: String
+    organization: Organization
+    pages: SurveyPageConnection
+    parameters: SurveyGatewayParameterConnection
+    smsKeyword: String
+    webSurveyTheme: WebSurveyTheme
+}
+
+type WebSurveyGateway implements SurveyGateway {
+    adaWcagAccessible: Boolean
+    alias: String
+    allowIndexing: Boolean
+    attemptLocationLookup: Boolean
+    captchaType: CapchaType
+    defaultOfferCode: OfferCode
+    description: String
+    disableDigitalFingerprinting: Boolean
+    disableOfferCodeFailureRateLimit: Boolean
+    disabledLocationSurvey: Survey
+    extendSurveyTimeout: Boolean
+    externalId: ID
+    failurePrompt: Prompt
+    forceHttps: Boolean
+    gdprEnabled: Boolean
+    id: ID
+    inbound: Boolean
+    name: String
+    organization: Organization
+    pages: SurveyPageConnection
+    parameters: SurveyGatewayParameterConnection
+    refreshInterval: Int
+    webSurveyTheme: WebSurveyTheme
+}
+
+type WebSurveyTheme {
+    backArrowImage: Image
+    backgroundImage: Image
+    buttonColor: String
+    clientGoogleKey: String
+    customLess: String
+    descriptionSEO: String
+    enabledForIntercept: Boolean
+    enabledThemeSettings: Boolean
+    faviconImage: Image
+    font: FontEnum!
+    footerHtml: String
+    googleAnalyticsEnabled: Boolean!
+    headerHtml: String
+    id: ID
+    name: String!
+    nextArrowImage: Image
+    orgLogoAltText: String
+    organization: Organization!
+    organizationImage: Image
+    pageBackgroundColor: String
+    progressBarColor: String
+    questionBackgroundColor: String
+    script: String
+    selectedColor: String
+    template: TemplateEnum!
+    textColor: String
+    themeSettings: ThemeSettings
+    windowTitle: String
+}
+
+type WebSurveyThemeConnection {
+    edges: [WebSurveyThemeEdge!]!
+    totalCount: Int!
+}
+
+type WebSurveyThemeEdge {
+    node: WebSurveyTheme!
+}
+
 type _Service {
     "The sdl representing the federated service capabilities. Includes federation directives, removes federation types, and includes rest of full schema after schema directives have been applied"
     sdl: String
+}
+
+enum CapchaType {
+    BOTDETECT
+    NONE
+    RECAPTCHA
+}
+
+enum CaptchaType {
+    BOTDETECT
+    NONE
+    RECAPTCHA
 }
 
 enum CategoricalPromptRenderEnum {
@@ -370,6 +1051,48 @@ enum CommentPromptHintingTypeEnum {
     FULL
     NEW
     NONE
+}
+
+enum CssBorderPropertyEnum {
+    DASHED
+    DOTTED
+    DOUBLE
+    GROOVE
+    HIDDEN
+    INSET
+    NONE
+    OUTSET
+    RIDGE
+    SOLID
+}
+
+enum CssDisplayPropertyEnum {
+    BLOCK
+    DISPLAY
+    NONE
+}
+
+enum CssUnderlinePropertyEnum {
+    NONE
+    UNDERLINE
+}
+
+enum CssUnitEnum {
+    AUTO
+    CH
+    CM
+    EM
+    EX
+    IN
+    MM
+    PC
+    PERCENT
+    PT
+    PX
+    REM
+    VH
+    VMAX
+    VMIN
 }
 
 enum DatePatternTypeEnum {
@@ -414,10 +1137,61 @@ enum EncodingEnum {
     NONE
 }
 
+enum FontEnum {
+    CALIBRI_HELVETICA_ARIAL_SANS_SERIF
+    HELVETICA_ARIAL_SANS_SERIF
+    PTSANS_ARIAL_SANS_SERIF
+}
+
+enum GenerationState {
+    DEFAULT
+    GENERATED
+    MANUAL_OVERRIDE
+}
+
+enum OfferCodeOrderBy {
+    externalId_asc
+    externalId_desc
+    id_asc
+    id_desc
+    offerCode_asc
+    offerCode_desc
+}
+
+enum OfferOrderBy {
+    externalId_asc
+    externalId_desc
+    id_asc
+    id_desc
+    name_asc
+    name_desc
+}
+
 enum PaddingOptionEnum {
     LEFT
     NONE
     RIGHT
+}
+
+enum PromptEventTriggerOperator {
+    EQUAL
+    GREATER_THAN
+    GREATER_THAN_EQUAL
+    LESS_THAN
+    LESS_THAN_EQUAL
+    NOT_EQUAL
+    NOT_NULL
+    NULL
+}
+
+enum PromptEventTriggerParseRule {
+    ENTIRE_STRING
+    SUBSTRING
+}
+
+enum PromptEventTriggerRuleOperator {
+    AND
+    OR
 }
 
 enum PromptType {
@@ -461,6 +1235,12 @@ enum PromptsOrderBy {
     name_desc
 }
 
+enum RedemptionCodeType {
+    CROFTS_NINE
+    CUSTOM_TABLE
+    STANDARD
+}
+
 enum ReplayStrategyEnum {
     NONE
     STAR
@@ -472,6 +1252,29 @@ enum Sort {
     desc
 }
 
+enum SurveyGatewayOrderBy {
+    alias_asc
+    alias_desc
+    id_asc
+    id_desc
+    name_asc
+    name_desc
+}
+
+enum SurveyGatewayParameterSourceType {
+    URL
+    WELCOME_PROMPT
+}
+
+enum SurveyGatewayType {
+    PooledVoiceSurveyGateway
+    VoiceSurveyGateway
+    WebServiceOutboundGateway
+    WebServiceVoiceSurveyGateway
+    WebServiceWebSurveyGateway
+    WebSurveyGateway
+}
+
 enum SurveyOrderBy {
     externalId_asc
     externalId_desc
@@ -479,6 +1282,10 @@ enum SurveyOrderBy {
     id_desc
     name_asc
     name_desc
+}
+
+enum TemplateEnum {
+    INMOMENT
 }
 
 enum TextPromptRenderEnum {
@@ -494,147 +1301,232 @@ enum ValidationTypeEnum {
     PHONE_US_CAN
 }
 
+enum WebSurveyThemeOrderByInput {
+    id_asc
+    id_desc
+    name_asc
+    name_desc
+}
+
 input CreateCommentPromptInput {
-    allowBargeIn: Boolean
+    allowBargeIn: Boolean! = true
     audioScript: String
-    checkDigitStrategy: CheckDigitStrategyEnum
-    commentPromptHintingType: CommentPromptHintingTypeEnum
-    confirm: Boolean
+    checkDigitStrategy: CheckDigitStrategyEnum! = NONE
+    commentPromptHintingType: CommentPromptHintingTypeEnum! = NONE
+    confirm: Boolean! = false
     cssIdentifier: String
     dataField: IDInput!
-    defaultDisabledSurveyPrompt: Boolean
-    disableHintingUntil5Words: Boolean
-    emptyCommentSoftPrompt: Boolean
-    endAfter5sSilence: Boolean
-    events: [PromptEventInput!]
+    disableHintingUntil5Words: Boolean! = false
+    emptyCommentSoftPrompt: Boolean! = false
+    endAfter5sSilence: Boolean! = false
     externalId: ID
     ghostText: String
     hintingThreshold: Int
     mask: String
-    maxImageCount: Int
+    maxImageCount: Int! = 0
     maxLength: Int
-    maxRecordTime: Int
-    minImageCount: Int
+    maxRecordTime: Int! = 45
+    minImageCount: Int! = 0
     name: String!
     organization: IDInput!
     pearModeName: String
-    phrases: [PromptPhraseInput!]
-    replayStrategy: ReplayStrategyEnum
-    repromptLimit: Int
-    required: Boolean = false
-    showRequiredMarker: Boolean = false
-    softPrompt: Boolean
-    thinkingBubble: Boolean
-    useStrengthMeter: Boolean
+    replayStrategy: ReplayStrategyEnum! = SURVEY
+    repromptLimit: Int! = 2
+    required: Boolean! = true
+    showRequiredMarker: Boolean! = false
+    softPrompt: Boolean! = false
+    thinkingBubble: Boolean! = false
+    useStrengthMeter: Boolean! = false
     webText: String
     wordTarget: Int
 }
 
+input CreateDataFieldPromptEventTrigger {
+    dataField: IDInput!
+    fieldOptions: [IDInput!]
+    operatorType: PromptEventTriggerOperator! = EQUAL
+    parseRule: PromptEventTriggerParseRule
+    parseRuleOptions: CreatePromptEventTriggerParseRuleOptions
+    value: String
+}
+
 input CreateDatePromptInput {
-    allowBargeIn: Boolean
+    allowBargeIn: Boolean! = true
     audioScript: String
-    checkDigitStrategy: CheckDigitStrategyEnum
-    confirm: Boolean
+    checkDigitStrategy: CheckDigitStrategyEnum! = NONE
+    confirm: Boolean! = false
     cssIdentifier: String
     customDatePattern: String
     dataField: IDInput!
-    datePatternType: DatePatternTypeEnum
-    dateSelectionOverride: DateSelectionOverrideEnum
-    defaultDisabledSurveyPrompt: Boolean
-    events: [PromptEventInput!]
+    datePatternType: DatePatternTypeEnum! = DEFAULT
+    dateSelectionOverride: DateSelectionOverrideEnum! = NONE
     externalId: ID
     ghostText: String
     mask: String
     name: String!
     organization: IDInput!
-    phrases: [PromptPhraseInput!]
-    replayStrategy: ReplayStrategyEnum
-    repromptLimit: Int
-    required: Boolean = false
-    showRequiredMarker: Boolean = false
+    replayStrategy: ReplayStrategyEnum! = SURVEY
+    repromptLimit: Int! = 2
+    required: Boolean! = true
+    showRequiredMarker: Boolean! = false
+    webText: String
+}
+
+input CreateLogicPromptInput {
+    allowBargeIn: Boolean! = true
+    audioScript: String
+    checkDigitStrategy: CheckDigitStrategyEnum! = NONE
+    confirm: Boolean! = false
+    cssIdentifier: String
+    dataField: IDInput!
+    externalId: ID
+    ghostText: String
+    mask: String
+    name: String!
+    organization: IDInput!
+    replayStrategy: ReplayStrategyEnum! = SURVEY
+    repromptLimit: Int! = 2
+    required: Boolean! = true
+    showRequiredMarker: Boolean! = false
     webText: String
 }
 
 input CreateMultipleChoicePromptInput {
-    allowBargeIn: Boolean = true
-    allowVoiceAnswer: Boolean = false
+    allowBargeIn: Boolean! = true
+    allowVoiceAnswer: Boolean! = false
     audioScript: String
-    autoAdvance: Boolean = false
-    checkDigitStrategy: CheckDigitStrategyEnum
+    autoAdvance: Boolean! = false
+    checkDigitStrategy: CheckDigitStrategyEnum! = NONE
     choices: [PromptChoiceCreateInput!]!
-    confirm: Boolean = false
+    confirm: Boolean! = false
     cssIdentifier: String
     dataField: IDInput!
-    defaultDisabledSurveyPrompt: Boolean = false
-    events: [PromptEventInput!]
     externalId: ID
     ghostText: String
     mask: String
     name: String!
     organization: IDInput!
-    phrases: [PromptPhraseInput!]
-    renderType: CategoricalPromptRenderEnum
-    replayStrategy: ReplayStrategyEnum
-    repromptLimit: Int
-    required: Boolean = true
-    reverseChoices: Boolean = false
-    showRequiredMarker: Boolean = false
+    renderType: CategoricalPromptRenderEnum! = VERTICAL
+    replayStrategy: ReplayStrategyEnum! = SURVEY
+    repromptLimit: Int! = 2
+    required: Boolean! = true
+    reverseChoices: Boolean! = false
+    showRequiredMarker: Boolean! = false
     webText: String
 }
 
 input CreateNumericPromptInput {
-    allowBargeIn: Boolean
+    allowBargeIn: Boolean! = true
     audioScript: String
-    checkDigitStrategy: CheckDigitStrategyEnum
-    confirm: Boolean
+    checkDigitStrategy: CheckDigitStrategyEnum! = NONE
+    confirm: Boolean! = false
     cssIdentifier: String
     dataField: IDInput!
-    defaultDisabledSurveyPrompt: Boolean
-    events: [PromptEventInput!]
     externalId: ID
-    forcedDecimalPlaces: DecimalOptionEnum
+    forcedDecimalPlaces: DecimalOptionEnum! = NONE
     ghostText: String
-    isCurrency: Boolean
+    isCurrency: Boolean! = false
     mask: String
-    maxLength: Int
-    minLength: Int
+    maxLength: Int! = 0
+    minLength: Int! = 0
     multiBoxData: String
     name: String!
     organization: IDInput!
-    phrases: [PromptPhraseInput!]
-    renderType: TextPromptRenderEnum
-    replayStrategy: ReplayStrategyEnum
-    repromptLimit: Int
-    required: Boolean = false
-    showRequiredMarker: Boolean = false
+    renderType: TextPromptRenderEnum! = PLAIN
+    replayStrategy: ReplayStrategyEnum! = SURVEY
+    repromptLimit: Int! = 2
+    required: Boolean! = true
+    showRequiredMarker: Boolean! = false
     webText: String
 }
 
+input CreateOfferCodeInput {
+    excludeWIdentifier: Boolean! = false
+    externalId: String
+    generationState: GenerationState! = DEFAULT
+    introPrompt: IDInput
+    location: IDInput!
+    offer: IDInput!
+    offerCode: String!
+    redemptionCodeType: RedemptionCodeType! = STANDARD
+    redemptionCodeTypeFilter: String
+    surveyGateway: IDInput!
+}
+
+input CreateOfferInput {
+    description: String
+    externalId: String
+    feedbackChannel: IDInput!
+    name: String!
+    offerSurveys: [CreateOfferSurveyInput!]
+    organization: IDInput!
+}
+
+input CreateOfferSurveyInput {
+    frequencyWeight: Int! = 1
+    survey: IDInput!
+}
+
+input CreatePromptEvent {
+    description: String
+    name: String!
+    surveyInit: Boolean! = false
+}
+
+input CreatePromptEventTriggerParseRuleOptions {
+    numberCharacters: Int
+    startCharacter: Int
+}
+
 input CreateRatingPromptInput {
-    allowBargeIn: Boolean = true
-    allowVoiceAnswer: Boolean = false
+    allowBargeIn: Boolean! = true
+    allowVoiceAnswer: Boolean! = false
     audioScript: String
-    autoAdvance: Boolean = false
-    checkDigitStrategy: CheckDigitStrategyEnum
+    autoAdvance: Boolean! = false
+    checkDigitStrategy: CheckDigitStrategyEnum! = NONE
     choices: [PromptChoiceCreateInput!]!
-    confirm: Boolean = false
+    confirm: Boolean! = false
     cssIdentifier: String
     dataField: IDInput!
-    defaultDisabledSurveyPrompt: Boolean = false
-    events: [PromptEventInput!]
     externalId: ID
     ghostText: String
     mask: String
     name: String!
     organization: IDInput!
-    phrases: [PromptPhraseInput!]
-    renderType: CategoricalPromptRenderEnum
-    replayStrategy: ReplayStrategyEnum
-    repromptLimit: Int
-    required: Boolean = true
-    reverseChoices: Boolean = false
-    showRequiredMarker: Boolean = false
+    renderType: CategoricalPromptRenderEnum! = VERTICAL
+    replayStrategy: ReplayStrategyEnum! = SURVEY
+    repromptLimit: Int! = 2
+    required: Boolean! = true
+    reverseChoices: Boolean! = false
+    showRequiredMarker: Boolean! = false
     webText: String
+}
+
+input CreateReadOnlyPromptInput {
+    allowBargeIn: Boolean! = true
+    audioScript: String
+    checkDigitStrategy: CheckDigitStrategyEnum! = NONE
+    confirm: Boolean! = false
+    cssIdentifier: String
+    externalId: ID
+    ghostText: String
+    mask: String
+    name: String!
+    organization: IDInput!
+    outputDataField: IDInput
+    replayStrategy: ReplayStrategyEnum! = SURVEY
+    repromptLimit: Int! = 2
+    required: Boolean! = false
+    showRequiredMarker: Boolean! = false
+    webText: String
+}
+
+input CreateSurveyGatewayParameter {
+    alias: String!
+    defaultValue: String
+    prompt: IDInput!
+    required: Boolean! = true
+    sourceType: SurveyGatewayParameterSourceType! = URL
 }
 
 input CreateSurveyInput {
@@ -643,70 +1535,140 @@ input CreateSurveyInput {
     feedbackChannel: IDInput
     name: String!
     organization: IDInput!
-    pages: [UpdateSurveySurveyPageInput!]
-    transferOffsite: Boolean = false
-    useStarRepeat: Boolean = false
+    pages: [SurveyPageInput!]
+    transferOffsite: Boolean! = false
+    useStarRepeat: Boolean! = false
 }
 
 input CreateSurveyPageInput {
-    completionPoint: Boolean
+    completionPoint: Boolean! = false
     cssIdentifier: String
-    displayNextButton: Boolean
-    displayPreviousButton: Boolean
+    displayNextButton: Boolean! = true
+    displayPreviousButton: Boolean! = true
     name: String!
-    pageTitle: String
     prompts: [IDInput!]
-    sidebarImageId: IDInput
+    sidebarImage: IDInput
+    title: String!
 }
 
 input CreateTextPromptInput {
-    allowBargeIn: Boolean
+    allowBargeIn: Boolean! = true
     audioScript: String
-    checkDigitStrategy: CheckDigitStrategyEnum
-    confirm: Boolean
+    checkDigitStrategy: CheckDigitStrategyEnum! = NONE
+    confirm: Boolean! = false
     cssIdentifier: String
     dataField: IDInput!
-    defaultDisabledSurveyPrompt: Boolean
     encodeString: String
-    encoding: EncodingEnum
-    events: [PromptEventInput!]
+    encoding: EncodingEnum! = NONE
     externalId: ID
     ghostText: String
     mask: String
-    maxLength: Int
-    minLength: Int
+    maxLength: Int! = 0
+    minLength: Int! = 0
     multiBoxData: String
     name: String!
     organization: IDInput!
-    phrases: [PromptPhraseInput!]
-    renderType: TextPromptRenderEnum
-    replayStrategy: ReplayStrategyEnum
-    repromptLimit: Int
-    required: Boolean = false
-    showRequiredMarker: Boolean = false
-    validationType: ValidationTypeEnum
+    renderType: TextPromptRenderEnum! = PLAIN
+    replayStrategy: ReplayStrategyEnum! = SURVEY
+    repromptLimit: Int! = 2
+    required: Boolean! = true
+    showRequiredMarker: Boolean! = false
+    validationType: ValidationTypeEnum! = NONE
     webText: String
 }
 
-input DataFieldInput {
-    id: ID
+input CreateWebServiceWebSurveyGatewayInput {
+    adaWcagAccessible: Boolean! = true
+    alias: String!
+    attemptLocationLookup: Boolean! = false
+    campaign: IDInput!
+    description: String
+    disableDigitalFingerprinting: Boolean! = false
+    disableInFlightSurveyCheck: Boolean! = true
+    disableOfferCodeFailureRateLimit: Boolean! = false
+    disabledLocationSurvey: IDInput
+    extendSurveyTimeout: Boolean! = false
+    externalId: ID
+    failurePrompt: IDInput
+    forceHttps: Boolean! = false
+    gdprEnabled: Boolean! = false
+    name: String!
+    organization: IDInput!
+    pages: [SurveyPageInput!]
+    smsKeyword: String
+    webSurveyTheme: IDInput
+}
+
+input CreateWebSurveyGatewayInput {
+    adaWcagAccessible: Boolean! = true
+    alias: String!
+    allowIndexing: Boolean! = false
+    attemptLocationLookup: Boolean! = false
+    captchaType: CaptchaType! = NONE
+    description: String
+    disableDigitalFingerprinting: Boolean! = false
+    disableOfferCodeFailureRateLimit: Boolean! = false
+    disabledLocationSurvey: IDInput
+    extendSurveyTimeout: Boolean! = false
+    externalId: ID
+    failurePrompt: IDInput
+    forceHttps: Boolean! = false
+    gdprEnabled: Boolean! = false
+    inbound: Boolean! = false
+    name: String!
+    organization: IDInput!
+    pages: [SurveyPageInput!]
+    refreshInterval: Int
+    webSurveyTheme: IDInput
 }
 
 input IDInput {
-    id: ID
+    id: ID!
 }
 
-input OrganizationInput {
-    id: ID
+input OfferCodeLocationWhereOrganizationInput {
+    id_equals: ID!
+}
+
+input OfferCodesWhereInput {
+    externalId_equals: String
+    gateway: OfferCodesWhereSurveyGatewayInput
+    generationState_equals: GenerationState
+    location: OfferCodesWhereLocationInput
+    offer: OfferCodesWhereOfferInput!
+    offerCode_contains: String
+    offerCode_equals: String
+}
+
+input OfferCodesWhereLocationInput {
+    id_in: [ID!]
+}
+
+input OfferCodesWhereOfferInput {
+    id_in: [ID!]
+    organization: OfferCodeLocationWhereOrganizationInput!
+}
+
+input OfferCodesWhereSurveyGatewayInput {
+    id_in: [ID!]
+}
+
+input OffersWhereInput {
+    name_contains: String
+    organization: OffersWhereOrganizationInput
+}
+
+input OffersWhereOrganizationInput {
+    id_in: [ID!]!
 }
 
 input PromptChoiceCreateInput {
     dataFieldOption: IDInput!
     drool: String
     dtmf: Int!
-    naOption: Boolean = false
-    otherOption: Boolean = false
-    randomizeOption: Boolean = false
+    naOption: Boolean! = false
+    otherOption: Boolean! = false
+    randomizeOption: Boolean! = false
     token: String!
     voiceToken: String
 }
@@ -733,14 +1695,6 @@ input PromptChoiceUpdateInput {
     id: ID!
 }
 
-input PromptEventInput {
-    id: ID!
-}
-
-input PromptPhraseInput {
-    id: ID!
-}
-
 input PromptsWhereInput {
     cssIdentifier_contains: String
     externalId: ID
@@ -752,6 +1706,19 @@ input PromptsWhereInput {
 input PromptsWhereOrganizationInput {
     global: Boolean
     id_in: [ID!]!
+}
+
+input SurveyGatewaysWhereInput {
+    alias_contains: String
+    name_contains: String
+    organization: SurveysWhereOrganizationInput
+    type_in: [SurveyGatewayType!]
+}
+
+input SurveyPageInput {
+    connect: IDInput
+    create: CreateSurveyPageInput
+    update: UpdateSurveyPageInput
 }
 
 input SurveysWhereInput {
@@ -778,11 +1745,9 @@ input UpdateCommentPromptInput {
     confirm: Boolean
     cssIdentifier: String
     dataField: IDInput
-    defaultDisabledSurveyPrompt: Boolean
     disableHintingUntil5Words: Boolean
     emptyCommentSoftPrompt: Boolean
     endAfter5sSilence: Boolean
-    events: [PromptEventInput!]
     externalId: ID
     ghostText: String
     hintingThreshold: Int
@@ -793,7 +1758,6 @@ input UpdateCommentPromptInput {
     minImageCount: Int
     name: String
     pearModeName: String
-    phrases: [PromptPhraseInput!]
     replayStrategy: ReplayStrategyEnum
     repromptLimit: Int
     required: Boolean
@@ -815,13 +1779,28 @@ input UpdateDatePromptInput {
     dataField: IDInput
     datePatternType: DatePatternTypeEnum
     dateSelectionOverride: DateSelectionOverrideEnum
-    defaultDisabledSurveyPrompt: Boolean
-    events: [PromptEventInput!]
     externalId: ID
     ghostText: String
     mask: String
     name: String
-    phrases: [PromptPhraseInput!]
+    replayStrategy: ReplayStrategyEnum
+    repromptLimit: Int
+    required: Boolean
+    showRequiredMarker: Boolean
+    webText: String
+}
+
+input UpdateLogicPromptInput {
+    allowBargeIn: Boolean
+    audioScript: String
+    checkDigitStrategy: CheckDigitStrategyEnum
+    confirm: Boolean
+    cssIdentifier: String
+    dataField: IDInput
+    externalId: ID
+    ghostText: String
+    mask: String
+    name: String
     replayStrategy: ReplayStrategyEnum
     repromptLimit: Int
     required: Boolean
@@ -839,13 +1818,10 @@ input UpdateMultipleChoicePromptInput {
     confirm: Boolean
     cssIdentifier: String
     dataField: IDInput
-    defaultDisabledSurveyPrompt: Boolean
-    events: [PromptEventInput!]
     externalId: ID
     ghostText: String
     mask: String
     name: String
-    phrases: [PromptPhraseInput!]
     renderType: CategoricalPromptRenderEnum
     replayStrategy: ReplayStrategyEnum
     repromptLimit: Int
@@ -862,8 +1838,6 @@ input UpdateNumericPromptInput {
     confirm: Boolean
     cssIdentifier: String
     dataField: IDInput
-    defaultDisabledSurveyPrompt: Boolean
-    events: [PromptEventInput!]
     externalId: ID
     forcedDecimalPlaces: DecimalOptionEnum
     ghostText: String
@@ -873,13 +1847,24 @@ input UpdateNumericPromptInput {
     minLength: Int
     multiBoxData: String
     name: String
-    phrases: [PromptPhraseInput!]
     renderType: TextPromptRenderEnum
     replayStrategy: ReplayStrategyEnum
     repromptLimit: Int
     required: Boolean
     showRequiredMarker: Boolean
     webText: String
+}
+
+input UpdateOfferInput {
+    description: String
+    externalId: String
+    feedbackChannel: IDInput
+    name: String
+}
+
+input UpdateOfferSurveyInput {
+    frequencyWeight: Int
+    survey: IDInput
 }
 
 input UpdateRatingPromptInput {
@@ -892,13 +1877,10 @@ input UpdateRatingPromptInput {
     confirm: Boolean
     cssIdentifier: String
     dataField: IDInput
-    defaultDisabledSurveyPrompt: Boolean
-    events: [PromptEventInput!]
     externalId: ID
     ghostText: String
     mask: String
     name: String
-    phrases: [PromptPhraseInput!]
     renderType: CategoricalPromptRenderEnum
     replayStrategy: ReplayStrategyEnum
     repromptLimit: Int
@@ -908,36 +1890,56 @@ input UpdateRatingPromptInput {
     webText: String
 }
 
+input UpdateReadOnlyPromptInput {
+    allowBargeIn: Boolean
+    audioScript: String
+    checkDigitStrategy: CheckDigitStrategyEnum
+    confirm: Boolean
+    cssIdentifier: String
+    externalId: ID
+    ghostText: String
+    mask: String
+    name: String
+    outputDataField: IDInput
+    replayStrategy: ReplayStrategyEnum
+    repromptLimit: Int
+    required: Boolean
+    showRequiredMarker: Boolean
+    webText: String
+}
+
+input UpdateSurveyGatewayParameter {
+    alias: String
+    defaultValue: String
+    prompt: IDInput
+    required: Boolean
+    sourceType: SurveyGatewayParameterSourceType
+}
+
 input UpdateSurveyInput {
     description: String
     externalId: ID
     feedbackChannel: IDInput
     name: String
-    pages: [UpdateSurveySurveyPageInput!]
+    pages: [SurveyPageInput!]
     transferOffsite: Boolean
     useStarRepeat: Boolean
 }
 
-input UpdateSurveyPageInput {
+input UpdateSurveyPageDataInput {
     completionPoint: Boolean
     cssIdentifier: String
     displayNextButton: Boolean
     displayPreviousButton: Boolean
     name: String
-    pageTitle: String
     prompts: [IDInput!]
-    sidebarImageId: IDInput
+    sidebarImage: IDInput
+    title: String
 }
 
-input UpdateSurveyPageUpdateInput {
-    data: UpdateSurveyPageInput
-    id: ID
-}
-
-input UpdateSurveySurveyPageInput {
-    connect: IDInput
-    create: CreateSurveyPageInput
-    update: UpdateSurveyPageUpdateInput
+input UpdateSurveyPageInput {
+    data: UpdateSurveyPageDataInput
+    id: ID!
 }
 
 input UpdateTextPromptInput {
@@ -947,10 +1949,8 @@ input UpdateTextPromptInput {
     confirm: Boolean
     cssIdentifier: String
     dataField: IDInput
-    defaultDisabledSurveyPrompt: Boolean
     encodeString: String
     encoding: EncodingEnum
-    events: [PromptEventInput!]
     externalId: ID
     ghostText: String
     mask: String
@@ -958,7 +1958,6 @@ input UpdateTextPromptInput {
     minLength: Int
     multiBoxData: String
     name: String
-    phrases: [PromptPhraseInput!]
     renderType: TextPromptRenderEnum
     replayStrategy: ReplayStrategyEnum
     repromptLimit: Int
@@ -966,4 +1965,56 @@ input UpdateTextPromptInput {
     showRequiredMarker: Boolean
     validationType: ValidationTypeEnum
     webText: String
+}
+
+input UpdateWebServiceWebSurveyGatewayInput {
+    adaWcagAccessible: Boolean
+    alias: String
+    attemptLocationLookup: Boolean
+    campaign: IDInput
+    description: String
+    disableDigitalFingerprinting: Boolean
+    disableInFlightSurveyCheck: Boolean
+    disableOfferCodeFailureRateLimit: Boolean
+    disabledLocationSurvey: IDInput
+    extendSurveyTimeout: Boolean
+    externalId: ID
+    failurePrompt: IDInput
+    forceHttps: Boolean
+    gdprEnabled: Boolean
+    name: String
+    pages: [SurveyPageInput!]
+    smsKeyword: String
+    webSurveyTheme: IDInput
+}
+
+input UpdateWebSurveyGatewayInput {
+    adaWcagAccessible: Boolean
+    alias: String
+    allowIndexing: Boolean
+    attemptLocationLookup: Boolean
+    captchaType: CaptchaType
+    description: String
+    disableDigitalFingerprinting: Boolean
+    disableOfferCodeFailureRateLimit: Boolean
+    disabledLocationSurvey: IDInput
+    extendSurveyTimeout: Boolean
+    externalId: ID
+    failurePrompt: IDInput
+    forceHttps: Boolean
+    gdprEnabled: Boolean
+    inbound: Boolean
+    name: String
+    pages: [SurveyPageInput!]
+    refreshInterval: Int
+    webSurveyTheme: IDInput
+}
+
+input WebSurveyThemeWhereInput {
+    name_contains: String
+    organization: WebSurveyThemesWhereOrganizationInput
+}
+
+input WebSurveyThemesWhereOrganizationInput {
+    id_in: [ID!]!
 }

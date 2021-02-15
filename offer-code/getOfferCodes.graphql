@@ -1,0 +1,54 @@
+query getOfferCodes {
+    offerCodes(
+        where: {
+            offer: {
+                organization: { id_equals: 1 },
+                id_in: [1, 2]
+            }
+            offerCode_equals: "1"
+            offerCode_contains: "Offer"
+            externalId_equals: "1"
+            gateway: {
+                id_in: [0, 1, 2]
+            }
+            location: {
+                id_in: [0, 1, 2]
+            }
+            generationState_equals: DEFAULT
+        }
+        orderBy: [id_asc, externalId_asc, offerCode_asc]
+        first: 2
+        offset: 0
+    ) {
+        totalCount
+        edges {
+            node {
+                id
+                externalId
+                offerCode
+                offer {
+                    id
+                    name
+                    organization {
+                        id
+                    }
+                }
+                surveyGateway {
+                    id
+                    name
+                }
+                location {
+                    id
+                }
+                introPrompt {
+                    id
+                    name
+                }
+                redemptionCodeType
+                redemptionCodeTypeFilter
+                generationState
+                excludeWIdentifier
+            }
+        }
+    }
+}

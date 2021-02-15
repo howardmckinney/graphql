@@ -1,0 +1,29 @@
+query getOfferCode {
+    offerCode(id: 1) {
+        id
+        externalId
+        offerCode
+        offer {
+            id
+            name
+            organization {
+                id
+            }
+        }
+        surveyGateway {
+            id
+            name
+        }
+        location {
+            id
+        }
+        introPrompt {
+            id
+            name
+        }
+        redemptionCodeType
+        redemptionCodeTypeFilter
+        generationState
+        excludeWIdentifier
+    }
+}

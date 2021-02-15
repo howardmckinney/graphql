@@ -1,25 +1,23 @@
 mutation createCommentPrompt {
     createCommentPrompt(
         data: {
-            name: "Car Model2"
-            organization: { id: "941" }
-            externalId: 9
-            dataField: { id: "1" }
+            name: "Car Model"
+            organization: { id: "1" }
+            externalId: 15
+            dataField: { id: "451" }
             cssIdentifier: "Some CSS"
             audioScript: "Some audio script"
             webText: "Some web text"
             checkDigitStrategy: BUSTED_MICROS
             allowBargeIn: true
             confirm: true
-            phrases: { id: 4838 }
-            events: { id: 100 }
             required: true
             showRequiredMarker: true
             ghostText: "My ghost text"
             mask: "My mask"
             replayStrategy: STAR
             repromptLimit: 2
-            defaultDisabledSurveyPrompt: true
+
             # Comment prompt specific
             maxRecordTime: 30
             endAfter5sSilence: true
@@ -29,7 +27,7 @@ mutation createCommentPrompt {
             hintingThreshold: 3
             commentPromptHintingType: FULL
             disableHintingUntil5Words: true
-            pearModeName: "Pear mode?"
+            pearModeName: "Pear Mode"
             thinkingBubble: true
             softPrompt: true
             emptyCommentSoftPrompt: true
@@ -47,12 +45,6 @@ mutation createCommentPrompt {
         dataField {
             id
         }
-        phrases {
-            id
-        }
-        events {
-            id
-        }
         cssIdentifier
         audioScript
         webText
@@ -67,7 +59,7 @@ mutation createCommentPrompt {
         ghostText
         mask
 
-        # Numeric prompt specific
+        # Comment prompt specific
         maxRecordTime
         endAfter5sSilence
         maxLength

@@ -1,6 +1,6 @@
 mutation updateTextPrompt {
     updateTextPrompt(
-        id: "1"
+        id: 1
         data: {
             name: "Car Model5"
             dataField: { id: "13234" }

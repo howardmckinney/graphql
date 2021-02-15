@@ -1,0 +1,8 @@
+mutation offer {
+    deleteOffer(id: 3) {
+        id
+        externalId
+        name
+        description
+    }
+}

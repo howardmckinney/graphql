@@ -1,0 +1,39 @@
+mutation offer {
+    createOffer(
+        data: {
+            externalId: "100",
+            name: "Primary Offer",
+            description: "Primary Offer desc",
+            feedbackChannel: { id:"1"},
+            organization: { id: "1" },
+            offerSurveys: [ {
+                frequencyWeight: 10
+                survey: { id: "1" }
+            } ]
+            ,
+        }) {
+        id
+        externalId
+        name
+        description
+        organization{
+            id
+        }
+        feedbackChannel{
+            id
+        }
+        offerSurveys{
+            totalCount
+            edges{
+                node{
+                    id
+                    frequencyWeight
+                    survey{
+                        id
+                        name
+                    }
+                }
+            }
+        }
+    }
+}

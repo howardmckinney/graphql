@@ -1,29 +1,31 @@
-mutation createDatePrompt {
-    createDatePrompt(
+mutation createTextPrompt {
+    createTextPrompt(
         data: {
-            name: "Car Model2"
-            organization: { id: "941" }
-            externalId: 11
-            dataField: { id: "1" }
+            name: "Car Model"
+            organization: { id: "1" }
+            externalId: 20
+            dataField: { id: "451" }
             cssIdentifier: "Some CSS"
             audioScript: "Some audio script"
             webText: "Some web text"
             checkDigitStrategy: BUSTED_MICROS
             allowBargeIn: true
             confirm: true
-            phrases: { id: 4838 }
-            events: { id: 100 }
             required: true
             showRequiredMarker: true
             ghostText: "My ghost text"
             mask: "My mask"
             replayStrategy: STAR
             repromptLimit: 2
-            defaultDisabledSurveyPrompt: true
-            # Date prompt specific
-            customDatePattern: "Some pattern"
-            datePatternType: MMDDYYYY
-            dateSelectionOverride: ALLOW_FUTURE_DATE_INPUT
+
+            # Text prompt specific
+            minLength: 10
+            maxLength: 100
+            encoding: ASCII
+            encodeString: "Some encode string"
+            validationType: EMAIL
+            renderType: MASKING_PLACEHOLDER
+            multiBoxData: "What is multibox data?"
         }
     ) {
         __typename
@@ -34,12 +36,6 @@ mutation createDatePrompt {
         }
         externalId
         dataField {
-            id
-        }
-        phrases {
-            id
-        }
-        events {
             id
         }
         cssIdentifier
@@ -56,9 +52,13 @@ mutation createDatePrompt {
         ghostText
         mask
 
-        # Date prompt specific
-        customDatePattern
-        datePatternType
-        dateSelectionOverride
+        # Text prompt
+        minLength
+        maxLength
+        encoding
+        encodeString
+        validationType
+        renderType
+        multiBoxData
     }
 }

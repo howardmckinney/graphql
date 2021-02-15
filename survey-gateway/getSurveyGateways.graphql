@@ -1,0 +1,109 @@
+query getSurveyGateways {
+    surveyGateways (
+        where: {
+            name_contains: "gateway"
+            alias_contains: "gateway"
+            organization: {
+                id_in: [1, 2]
+            }
+            type_in: [WebSurveyGateway, WebServiceVoiceSurveyGateway, WebServiceOutboundGateway]
+
+        }
+        orderBy: [name_asc, id_asc, alias_asc]
+    ) {
+        totalCount
+        edges {
+            node {
+                __typename
+                id
+                name
+                description
+                alias
+                externalId
+                organization {
+                    id
+                }
+                failurePrompt {
+                    id
+                    # Not implemented
+                    # name
+                }
+                disableDigitalFingerprinting
+                disableOfferCodeFailureRateLimit
+                attemptLocationLookup
+                extendSurveyTimeout
+                adaWcagAccessible
+                forceHttps
+                defaultOfferCode {
+                    id
+                    offerCode
+                }
+                webSurveyTheme {
+                    id
+                    # Not implemented
+                    # name
+                }
+                disabledLocationSurvey {
+                    id
+                    # Not implemented
+                    # name
+                }
+                pages {
+                    totalCount
+                    edges {
+                        node {
+                            id
+                            name
+                        }
+                    }
+                }
+                parameters {
+                    totalCount
+                    edges {
+                        node {
+                            id
+                            alias
+                            sourceType
+                            defaultValue
+                            required
+                            prompt {
+                                id
+                                name
+                            }
+                        }
+                    }
+                }
+                ... on VoiceSurveyGateway {
+                    __typename
+                }
+                ... on PooledVoiceSurveyGateway {
+                    __typename
+                }
+                ... on WebServiceVoiceSurveyGateway {
+                    __typename
+                }
+                ... on WebServiceOutboundSurveyGateway {
+                    __typename
+                    gdprEnabled
+                }
+                ... on WebSurveyGateway {
+                    __typename
+                    inbound
+                    allowIndexing
+                    captchaType
+                    refreshInterval
+                    gdprEnabled
+                }
+                ... on WebServiceWebSurveyGateway {
+                    __typename
+                    gdprEnabled
+                    smsKeyword
+                    disableInFlightSurveyCheck
+                    campaign {
+                        id
+                    }
+                }
+            }
+        }
+    }
+}

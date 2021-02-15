@@ -1,0 +1,63 @@
+mutation createNumericPrompt {
+    createNumericPrompt(
+        data: {
+            name: "Car Model"
+            organization: { id: "1" }
+            externalId: 50
+            dataField: { id: "451" }
+            cssIdentifier: "Some CSS"
+            audioScript: "Some audio script"
+            webText: "Some web text"
+            checkDigitStrategy: BUSTED_MICROS
+            allowBargeIn: true
+            confirm: true
+            required: true
+            showRequiredMarker: true
+            ghostText: "My ghost text"
+            mask: "My mask"
+            replayStrategy: STAR
+            repromptLimit: 2
+
+            # Numeric prompt specific
+            minLength: 0
+            maxLength: 5
+            isCurrency: true
+            forcedDecimalPlaces: FOUR
+            renderType: MASKING_PLACEHOLDER
+            multiBoxData: "What is multibix data?"
+        }
+    ) {
+        __typename
+        id
+        name
+        organization {
+            id
+        }
+        externalId
+        dataField {
+            id
+        }
+        cssIdentifier
+        audioScript
+        webText
+        allowBargeIn
+        confirm
+        required
+        repromptLimit
+        defaultDisabledSurveyPrompt
+        showRequiredMarker
+        checkDigitStrategy
+        replayStrategy
+        ghostText
+        mask
+
+        # Numeric prompt specific
+        minLength
+        maxLength
+        isCurrency
+        forcedDecimalPlaces
+        renderType
+        multiBoxData
+    }
+}
+

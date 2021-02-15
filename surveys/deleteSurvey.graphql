@@ -1,5 +1,5 @@
 mutation deleteSurvey {
-    deleteSurvey(id: 1) {
+    deleteSurvey(id: 8) {
         id
         name
         pages {

@@ -1,0 +1,27 @@
+query getOffers {
+    offers(
+        where: {
+            name_contains: "offer"
+            organization: {id_in: [1,2]}
+        }
+        orderBy: [id_asc, externalId_asc, name_asc]
+        first: 2
+        offset: 0
+    ) {
+        totalCount
+        edges {
+            node {
+                id
+                name
+                description
+                externalId
+                organization {
+                    id
+                }
+                feedbackChannel {
+                    id
+                }
+            }
+        }
+    }
+}

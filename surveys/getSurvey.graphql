@@ -2,19 +2,29 @@ query getSurvey {
     survey(id: 1) {
         id
         name
+        description
         organization {
             id
         }
         externalId
+        feedbackChannel {
+            id
+        }
+        useStarRepeat
+        transferOffsite
         pages {
             totalCount
             edges {
                 node {
                     id
                     name
-                    pageTitle
-                    displayPreviousButton
+                    title
+                    cssIdentifier
+                    sidebarImage {
+                        id
+                    }
                     displayNextButton
+                    displayPreviousButton
                     completionPoint
                     prompts {
                         totalCount
@@ -23,6 +33,7 @@ query getSurvey {
                                 __typename
                                 id
                                 name
+                                externalId
                                 organization {
                                     id
                                 }

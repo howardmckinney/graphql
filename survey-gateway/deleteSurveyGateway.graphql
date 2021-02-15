@@ -1,0 +1,10 @@
+mutation deleteSurveyGateway {
+    deleteSurveyGateway( id: 2) {
+        id
+        name
+        description
+        organization {
+            id
+        }
+    }
+}

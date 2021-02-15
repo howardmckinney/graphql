@@ -1,33 +1,32 @@
-mutation createTextPrompt {
-    createTextPrompt(
+mutation createRatingPrompt {
+    createRatingPrompt(
         data: {
-            name: "Car Model2"
-            organization: { id: "941" }
-            externalId: 10
-            dataField: { id: "1" }
+            name: "Car Model"
+            organization: { id: "1" }
+            externalId: 16
+            dataField: { id: "451" }
             cssIdentifier: "Some CSS"
             audioScript: "Some audio script"
             webText: "Some web text"
             checkDigitStrategy: BUSTED_MICROS
             allowBargeIn: true
             confirm: true
-            phrases: { id: 4838 }
-            events: { id: 100 }
             required: true
             showRequiredMarker: true
             ghostText: "My ghost text"
             mask: "My mask"
             replayStrategy: STAR
             repromptLimit: 2
-            defaultDisabledSurveyPrompt: true
-            # Text prompt specific
-            minLength: 10
-            maxLength: 100
-            encoding: ASCII
-            encodeString: "Some encode string"
-            validationType: EMAIL
-            renderType: MASKING_PLACEHOLDER
-            multiBoxData: "What is multibox data?"
+
+            # Rating prompt specific
+            choices:  [
+                { token: "Satisfied" dtmf: 1 dataFieldOption: { id: "451" } }
+                { token: "Dissatisfied" dtmf: 2 dataFieldOption: { id: "451" } }
+            ]
+            allowVoiceAnswer: true
+            reverseChoices: true
+            renderType: PULLDOWN
+            autoAdvance: true
         }
     ) {
         __typename
@@ -40,12 +39,6 @@ mutation createTextPrompt {
         dataField {
             id
         }
-        phrases {
-            id
-        }
-        events {
-            id
-        }
         cssIdentifier
         audioScript
         webText
@@ -53,19 +46,19 @@ mutation createTextPrompt {
         confirm
         repromptLimit
         required
+        showRequiredMarker
         defaultDisabledSurveyPrompt
         showRequiredMarker
         checkDigitStrategy
         replayStrategy
         ghostText
         mask
-        # Text prompt
-        minLength
-        maxLength
-        encoding
-        encodeString
-        validationType
+
+        # Comment prompt specific
+        allowVoiceAnswer
+        reverseChoices
         renderType
-        multiBoxData
+        autoAdvance
+        choices { id token dtmf voiceToken drool naOption otherOption randomizeOption dataFieldOption { id } }
     }
 }

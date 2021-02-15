@@ -1,0 +1,55 @@
+mutation createMultipleChoicePrompt {
+    createMultipleChoicePrompt(
+        data: {
+            name:"Visit Satisfaction",
+            organization: { id: "1" }
+            dataField: { id: "451" }
+            externalId: 1
+            audioScript: "Audio Script"
+            webText: "Web Text"
+            allowBargeIn: true
+            confirm: true
+            required: true
+            showRequiredMarker: true
+            repromptLimit: 3
+            mask: "Mask"
+            ghostText: "Ghost Text"
+            cssIdentifier: "CSS"
+            checkDigitStrategy: MOD10
+            replayStrategy: SURVEY
+            choices: [
+                { token: "Satisfied" dtmf: 1 dataFieldOption: { id: "1589" } }
+                { token: "Dissatisfied" dtmf: 2 dataFieldOption: { id: "1909" } }
+            ]
+        }) {
+        __typename
+        id
+        name
+        webText
+        audioScript
+        allowBargeIn
+        confirm
+        repromptLimit
+        replayStrategy
+        required
+        showRequiredMarker
+        mask
+        ghostText
+        cssIdentifier
+        defaultDisabledSurveyPrompt
+        checkDigitStrategy
+        organization {
+            id
+        }
+        dataField {
+            id
+        }
+
+        # Multiple choice prompt specific
+        allowVoiceAnswer
+        reverseChoices
+        renderType
+        autoAdvance
+        choices { id token dtmf voiceToken drool naOption otherOption randomizeOption dataFieldOption { id } }
+    }
+}
